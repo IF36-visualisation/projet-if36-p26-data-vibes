@@ -165,5 +165,5 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 |--:|----------|----------|--------------|---------|
 | 19 | Le nombre de buts évolue-t-il selon les saisons ? | Season, Goals | Line chart | Évolution du jeu |
 | 20 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques | Heatmap | Vision globale des relations |
-| 20 | Quelles variables sont corrélées entre elles ?                     | Variables numériques      | Heatmap (corrélation) | Permet d’avoir une vue globale des relations entre toutes les variables.                               |
+    
 
