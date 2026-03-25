@@ -92,8 +92,6 @@ Ces variables permettent d’analyser le score final et la dynamique entre premi
 
 Ces variables décrivent la production offensive et la pression exercée par les équipes.
 
----
-
 **Discipline et engagement**
 - `HF` (*Home Fouls*) : nombre de fautes commises par l’équipe à domicile  
 - `AF` (*Away Fouls*) : nombre de fautes commises par l’équipe à l’extérieur  
