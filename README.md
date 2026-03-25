@@ -16,8 +16,6 @@ Le jeu de données étudié porte sur les matchs de Premier League anglaise et c
 
 Chaque observation correspond à un match et regroupe des informations sur le score, le déroulement du match, l’activité des équipes ainsi que certains éléments contextuels.
 
-Ce dataset provient d’une source publique (Kaggle) et a été retenu pour sa richesse, sa lisibilité et sa pertinence dans le cadre d’une analyse exploratoire basée sur la visualisation de données.
-
 ---
 
 #### Typologie des variables
