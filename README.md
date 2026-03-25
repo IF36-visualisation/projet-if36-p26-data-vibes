@@ -114,29 +114,28 @@ De plus, le dataset ne contient pas d’informations contextuelles (joueurs, ble
 
 ### Questions de recherche
 
-Afin d’explorer le dataset de manière claire et structurée, nous avons retenu cinq questions principales :
+Afin d’explorer le dataset de manière claire et structurée, nous avons retenu 20 questions principales :
 
-1. **Les équipes à domicile gagnent-elles plus souvent ?**  
-   - **Variables** : `FTR`  
-   - **Visualisation** : diagramme en barres  
-   - **Objectif** : comparaison des résultats (victoire à domicile / nul / victoire à l’extérieur)
+|    | Question                                                           | Variables                 | Visualisation         | Pourquoi ce choix est adapté                                                                           |
+| -- | ------------------------------------------------------------------ | ------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| 1  | Quelle est la proportion de victoires (domicile, extérieur, nul) ? | FTR                       | Bar chart             | Permet de comparer des catégories discrètes et de visualiser rapidement la distribution des résultats. |
+| 2  | Quelle est la distribution du nombre de buts par match ?           | FTHG, FTAG                | Histogramme           | Idéal pour analyser la distribution d’une variable numérique (forme, dispersion, asymétrie).           |
+| 3  | Le nombre de buts évolue-t-il selon les saisons ?                  | Season, TotalGoals        | Line chart            | Permet d’observer des tendances temporelles et des évolutions dans le temps.                           |
+| 4  | Quelles équipes marquent le plus ?                                 | HomeTeam, AwayTeam, Goals | Bar chart (Top N)     | Permet de comparer efficacement des valeurs entre catégories (équipes).                                |
+| 5  | Quelles équipes encaissent le plus de buts ?                       | Goals conceded            | Bar chart             | Permet d’identifier les équipes les plus faibles défensivement.                                        |
+| 6  | Existe-t-il un avantage du terrain ?                               | FTR                       | Bar chart             | Visualisation simple pour observer un déséquilibre entre catégories.                                   |
+| 7  | Les équipes qui tirent plus gagnent-elles plus souvent ?           | HS, AS, FTR               | Boxplot               | Compare la distribution d’une variable numérique selon des catégories.                                 |
+| 8  | Relation entre tirs et buts ?                                      | HS, FTHG                  | Scatter plot          | Permet d’identifier une corrélation entre deux variables quantitatives.                                |
+| 9  | Les tirs cadrés expliquent-ils mieux les buts ?                    | HST, FTHG                 | Scatter + régression  | Permet de visualiser une relation et une tendance (corrélation plus précise).                          |
+| 10 | Les corners influencent-ils les buts ?                             | HC, FTHG                  | Scatter plot          | Permet de tester une relation potentielle entre deux variables.                                        |
+| 11 | Les matchs avec plus de tirs ont-ils plus de buts ?                | TotalShots, TotalGoals    | Scatter plot          | Permet de vérifier si l’intensité offensive influence le score.                                        |
+| 12 | Distribution du nombre de tirs ?                                   | HS, AS                    | Histogramme           | Permet de comprendre la variabilité et la dispersion des tirs.                                         |
+| 13 | Quelles équipes commettent le plus de fautes ?                     | HF, AF                    | Bar chart             | Permet de comparer le style de jeu des équipes.                                                        |
+| 14 | Quelles équipes reçoivent le plus de cartons ?                     | HY, AY                    | Bar chart             | Permet d’identifier les équipes les plus sanctionnées.                                                 |
+| 15 | Les fautes entraînent-elles des cartons ?                          | HF, HY                    | Scatter plot          | Permet d’analyser la relation entre agressivité et sanctions.                                          |
+| 16 | Les arbitres distribuent-ils différemment les cartons ?            | Referee, Cards            | Bar chart             | Permet de comparer des comportements entre individus (arbitres).                                       |
+| 17 | Les cartons évoluent-ils dans le temps ?                           | Season, Cards             | Line chart            | Permet d’observer une évolution temporelle.                                                            |
+| 18 | Les matchs avec plus de buts ont-ils plus de tirs ?                | TotalGoals, TotalShots    | Scatter plot          | Permet de valider une hypothèse logique sur l’intensité du jeu.                                        |
+| 19 | Les équipes dominantes en tirs gagnent-elles ?                     | ShotDiff, FTR             | Bar chart / boxplot   | Permet de relier domination statistique et résultat.                                                   |
+| 20 | Quelles variables sont corrélées entre elles ?                     | Variables numériques      | Heatmap (corrélation) | Permet d’avoir une vue globale des relations entre toutes les variables.                               |
 
-2. **L’avantage du terrain évolue-t-il selon les saisons ?**  
-   - **Variables** : `Season`, `FTR`  
-   - **Visualisation** : courbe d’évolution ou diagramme en barres groupées  
-   - **Objectif** : étude de l’évolution temporelle du taux de victoire à domicile
-
-3. **Le résultat à la mi-temps influence-t-il le résultat final ?**  
-   - **Variables** : `HTR`, `FTR`  
-   - **Visualisation** : diagramme en barres groupées ou diagramme mosaïque  
-   - **Objectif** : analyse de la relation entre la mi-temps et le résultat final
-
-4. **Les tirs cadrés expliquent-ils mieux la victoire que le nombre total de tirs ?**  
-   - **Variables** : `HS`, `AS`, `HST`, `AST`, `FTR`  
-   - **Visualisation** : boxplots  
-   - **Objectif** : comparaison de l’efficacité offensive selon le résultat du match
-
-5. **Un carton rouge influence-t-il fortement l’issue d’un match ?**  
-   - **Variables** : `HR`, `AR`, `FTR`  
-   - **Visualisation** : diagramme en barres groupées ou empilées  
-   - **Objectif** : analyse de l’impact des cartons rouges sur le résultat final
