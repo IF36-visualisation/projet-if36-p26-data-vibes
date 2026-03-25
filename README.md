@@ -97,3 +97,33 @@ Certaines variables (tirs, tirs cadrés, cartons, arbitres…) ne sont pas rense
 Cela implique que certaines analyses devront être réalisées sur des sous-ensembles de données.
 
 De plus, le dataset ne contient pas d’informations contextuelles (joueurs, blessures, tactiques), ce qui limite l’interprétation causale des résultats.
+
+
+### Questions de recherche
+
+Afin d’explorer le dataset de manière claire et structurée, nous avons retenu cinq questions principales :
+
+1. **Les équipes à domicile gagnent-elles plus souvent ?**  
+   - **Variables** : `FTR`  
+   - **Visualisation** : diagramme en barres  
+   - **Objectif** : comparaison des résultats (victoire à domicile / nul / victoire à l’extérieur)
+
+2. **L’avantage du terrain évolue-t-il selon les saisons ?**  
+   - **Variables** : `Season`, `FTR`  
+   - **Visualisation** : courbe d’évolution ou diagramme en barres groupées  
+   - **Objectif** : étude de l’évolution temporelle du taux de victoire à domicile
+
+3. **Le résultat à la mi-temps influence-t-il le résultat final ?**  
+   - **Variables** : `HTR`, `FTR`  
+   - **Visualisation** : diagramme en barres groupées ou diagramme mosaïque  
+   - **Objectif** : analyse de la relation entre la mi-temps et le résultat final
+
+4. **Les tirs cadrés expliquent-ils mieux la victoire que le nombre total de tirs ?**  
+   - **Variables** : `HS`, `AS`, `HST`, `AST`, `FTR`  
+   - **Visualisation** : boxplots  
+   - **Objectif** : comparaison de l’efficacité offensive selon le résultat du match
+
+5. **Un carton rouge influence-t-il fortement l’issue d’un match ?**  
+   - **Variables** : `HR`, `AR`, `FTR`  
+   - **Visualisation** : diagramme en barres groupées ou empilées  
+   - **Objectif** : analyse de l’impact des cartons rouges sur le résultat final
