@@ -3,14 +3,20 @@
 #
 **Contexte et objectifs**
 #
-Le présent projet s’inscrit dans le domaine de la data analyse appliquée au sport. Il repose sur l’exploitation d’un dataset contenant les résultats et statistiques des matchs de la Premier League sur plusieurs saisons. Ce championnat, reconnu pour sa compétitivité, offre un cadre pertinent pour étudier les facteurs influençant les performances des équipes et les résultats des rencontres.
+Le présent projet s’inscrit dans le domaine de la data analyse appliquée au sport. Il repose sur l’exploitation du dataset English Premier League (EPL) Results disponible sur kaggle à l'adresse: https://www.kaggle.com/datasets/irkaal/english-premier-league-results/data.
+Il contient les résultats et statistiques des matchs de la Premier League sur plusieurs saisons. Ce championnat, reconnu pour sa compétitivité, offre un cadre pertinent pour étudier les facteurs influençant les performances des équipes et les résultats des rencontres.
 
-L’objectif de cette étude est de réaliser une analyse exploratoire des données afin d’identifier les tendances, les relations entre variables et les facteurs susceptibles d’influencer l’issue d’un match. Cette analyse permettra notamment d’évaluer l’impact des statistiques de jeu (tirs, fautes, cartons) sur les résultats et de dégager des insights exploitables pour des analyses plus avancées ou des modèles prédictifs.
+L’objectif de cette étude est de réaliser une analyse exploratoire des données afin de:
+- Identifier les tendances, 
+- Identifier les relations entre variables et les facteurs susceptibles d’influencer l’issue d’un match.
+  
+Cette analyse permettra notamment d’évaluer l’impact des statistiques de jeu (tirs, fautes, cartons) sur les résultats et de dégager des insights exploitables pour des analyses plus avancées.
 
-##
+---
+
 **Structure du dataset**
 
-### Données
+#
 
 Le jeu de données étudié porte sur les matchs de Premier League anglaise et couvre plusieurs saisons. Il est fourni au format **CSV** et contient **11 113 observations** (matchs) et **23 variables**.
 
