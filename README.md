@@ -116,7 +116,6 @@ De plus, le dataset ne contient pas d’informations contextuelles (joueurs, ble
 
 Afin de structurer notre analyse de manière cohérente, nous avons organisé nos questions comme une enquête progressive permettant de mieux comprendre les résultats des matchs de Premier League.
 
----
 
 ### 1. Comprendre les résultats du championnat
 
@@ -127,7 +126,6 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 3 | Quelle est la distribution du nombre de buts par match ? | FTHG, FTAG | Histogramme | Comprendre le profil des matchs |
 | 4 | Quelles équipes marquent le plus ? | Teams, Goals | Bar chart | Identifier les meilleures attaques |
 
----
 
 ### 2. Dynamique des matchs
 
@@ -137,7 +135,6 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 6 | Quelle proportion de matchs connaît un retournement ? | HTR, FTR | Bar chart | Mesurer l’instabilité des matchs |
 | 7 | Le résultat à la mi-temps prédit-il le résultat final ? | HTR, FTR | Heatmap | Étudier la dépendance |
 
----
 
 ### 3. Performance offensive et efficacité
 
@@ -150,7 +147,6 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 12 | Existe-t-il des matchs dominés mais perdus ? | ShotDiff, FTR | Scatter | Cas contre-intuitifs |
 | 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff, FTR | Bar chart | Équilibre vs résultat |
 
----
 
 ### 4. Discipline et impact sur le jeu
 
@@ -162,7 +158,6 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 17 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | Teams, Cards | Bar chart | Comparaison des styles |
 | 18 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards | Bar chart | Influence du contexte |
 
----
 
 ### 5. Évolution et vision globale
 
