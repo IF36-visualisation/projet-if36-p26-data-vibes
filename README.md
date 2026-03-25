@@ -1,22 +1,27 @@
-# Analyse exploratoire: English Premier League (EPL) Results
-**Introduction**
-#
-**Contexte et objectifs**
-#
-Le présent projet s’inscrit dans le domaine de la data analyse appliquée au sport. Il repose sur l’exploitation du dataset English Premier League (EPL) Results disponible sur kaggle à l'adresse: https://www.kaggle.com/datasets/irkaal/english-premier-league-results/data.
-Il contient les résultats et statistiques des matchs de la Premier League sur plusieurs saisons. Ce championnat, reconnu pour sa compétitivité, offre un cadre pertinent pour étudier les facteurs influençant les performances des équipes et les résultats des rencontres.
+# Analyse exploratoire : English Premier League (EPL) Results
 
-L’objectif de cette étude est de réaliser une analyse exploratoire des données afin de:
-- Identifier les tendances, 
-- Identifier les relations entre variables et les facteurs susceptibles d’influencer l’issue d’un match.
-  
-Cette analyse permettra notamment d’évaluer l’impact des statistiques de jeu (tirs, fautes, cartons) sur les résultats et de dégager des insights exploitables pour des analyses plus avancées.
+## Introduction
+
+### Contexte et objectifs
+
+Le présent projet s’inscrit dans le domaine de la **data analyse appliquée au sport**. Il repose sur l’exploitation du dataset *English Premier League (EPL) Results*, disponible sur Kaggle :  
+https://www.kaggle.com/datasets/irkaal/english-premier-league-results/data
+
+Ce dataset contient les résultats et statistiques des matchs de la Premier League sur plusieurs saisons. Ce championnat, reconnu pour sa compétitivité, constitue un cadre pertinent pour étudier les facteurs influençant les performances des équipes et les résultats des rencontres.
+
+L’objectif de cette étude est de réaliser une **analyse exploratoire des données** afin de :
+
+- identifier les tendances générales du championnat  
+- analyser les relations entre variables  
+- mettre en évidence les facteurs susceptibles d’influencer l’issue d’un match  
+
+Cette analyse permettra notamment d’évaluer l’impact des statistiques de jeu (tirs, fautes, cartons) et de dégager des insights exploitables pour des analyses plus avancées.
 
 ---
 
-**Structure du dataset**
+### Données
 
-#
+#### Structure du dataset
 
 Le jeu de données étudié porte sur les matchs de Premier League anglaise et couvre plusieurs saisons. Il est fourni au format **CSV** et contient **11 113 observations** (matchs) et **23 variables**.
 
@@ -83,7 +88,7 @@ Ce jeu de données repose sur une logique simple : chaque match est décrit selo
 - la **discipline**  
 - le **contexte** (équipes, saison, arbitre)  
 
-Cette structure permet de croiser les variables pour répondre à des questions variées.
+Cette organisation permet de croiser les variables afin de répondre à des questions variées sur le déroulement et l’issue des matchs.
 
 ---
 
@@ -94,7 +99,7 @@ Plusieurs sous-groupes peuvent être exploités :
 - domicile vs extérieur  
 - comparaison entre équipes  
 - évolution selon les saisons  
-- analyse selon le résultat  
+- analyse selon le résultat du match  
 
 ---
 
@@ -105,7 +110,3 @@ Certaines variables (tirs, tirs cadrés, cartons, arbitres…) ne sont pas rense
 Cela implique que certaines analyses devront être réalisées sur des sous-ensembles de données.
 
 De plus, le dataset ne contient pas d’informations contextuelles (joueurs, blessures, tactiques), ce qui limite l’interprétation causale des résultats.
-
----
-
-
