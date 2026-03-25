@@ -110,6 +110,7 @@ Cela implique que certaines analyses devront être réalisées sur des sous-ense
 
 De plus, le dataset ne contient pas d’informations contextuelles (joueurs, blessures, tactiques), ce qui limite l’interprétation causale des résultats.
 
+---
 
 ### Questions de recherche
 
