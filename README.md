@@ -123,8 +123,8 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 |--:|----------|----------|--------------|---------|
 | 1 | Quelle est la répartition des résultats (domicile, nul, extérieur) ? | FTR | Bar chart | Comprendre la structure globale |
 | 2 | Existe-t-il un avantage du terrain ? | FTR | Bar chart | Comparer domicile vs extérieur |
-| 3 | Quelle est la distribution du nombre de buts par match ? | FTHG, FTAG | Histogramme | Comprendre le profil des matchs |
-| 4 | Quelles équipes marquent le plus ? | Teams, Goals | Bar chart | Identifier les meilleures attaques |
+| 3 | Quelle est la distribution du nombre de buts par match ? | TotalGoals (FTHG + FTAG) | Histogramme | Comprendre le profil des matchs |
+| 4 | Quelles équipes marquent le plus ? | HomeTeam, AwayTeam, TotalGoals (FTHG + FTAG) | Bar chart | Identifier les meilleures attaques |
 
 
 ### 2. Dynamique des matchs
@@ -141,11 +141,11 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
 | 8 | Les équipes qui tirent le plus gagnent-elles ? | HS, AS, FTR | Boxplot | Tester la domination offensive |
-| 9 | Les tirs cadrés sont-ils plus déterminants que les tirs ? | HST, HS, Goals | Scatter | Mesurer l’efficacité |
-| 10 | Existe-t-il une relation entre tirs et buts ? | TotalShots, TotalGoals | Scatter | Corrélation |
-| 11 | Les équipes dominantes en tirs gagnent-elles réellement ? | ShotDiff, FTR | Boxplot | Domination vs victoire |
-| 12 | Existe-t-il des matchs dominés mais perdus ? | ShotDiff, FTR | Scatter | Cas contre-intuitifs |
-| 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff, FTR | Bar chart | Équilibre vs résultat |
+| 9 | Les tirs cadrés sont-ils plus déterminants que les tirs ? | HST, HS, TotalGoals (FTHG + FTAG) | Scatter | Mesurer l’efficacité |
+| 10 | Existe-t-il une relation entre tirs et buts ? | TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter | Corrélation |
+| 11 | Les équipes dominantes en tirs gagnent-elles réellement ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
+| 12 | Existe-t-il des matchs dominés mais perdus ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
+| 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff (HS − AS), FTR | Bar chart | Équilibre vs résultat |
 
 
 ### 4. Discipline et impact sur le jeu
@@ -155,15 +155,15 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 14 | Les fautes influencent-elles le résultat du match ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
 | 15 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
 | 16 | Les cartons rouges ont-ils un impact sur le résultat ? | HR, FTR | Bar chart | Impact d’un événement critique |
-| 17 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | Teams, Cards | Bar chart | Comparaison des styles |
-| 18 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards | Bar chart | Influence du contexte |
+| 17 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
+| 18 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards (HY + AY + HR + AR) | Bar chart | Influence du contexte |
 
 
 ### 5. Évolution et vision globale
 
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
-| 19 | Le nombre de buts évolue-t-il selon les saisons ? | Season, Goals | Line chart | Évolution du jeu |
-| 20 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques | Heatmap | Vision globale des relations |
+| 19 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
+| 20 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards) | Heatmap | Vision globale des relations |
     
 
