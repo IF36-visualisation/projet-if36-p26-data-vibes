@@ -176,4 +176,10 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
 | 21 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards) | Heatmap | Vision globale des relations |
     
+---
 
+## Méthodologie de traitement et exploration interactive
+Dans le cadre du projet, notre démarche suit le cycle de **Aquire > Filter > Mine > Refine** :
+1. **Traitement (dplyr)** : Nettoyer les données et gérer des valeurs manquantes `NA` pour garantir la fiabilité des analyses.
+2. **Exploration statique (ggplot2)** : Créer des visualisations statiques pour valider les hypothèses.
+3. **Interactivité (Shiny)** : Transformer le visuel pour permettre à l'utilisateur de découvrir des tendences spécifiques en appliquant des filtres.
