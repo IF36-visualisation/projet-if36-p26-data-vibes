@@ -102,6 +102,14 @@ Ces variables permettent d’étudier le niveau d’engagement des équipes ains
 
 #
 
+#### Stratégie d'encodage visuel
+Pour permettre la clarté de l'analyse, les choix de visualisation respectent les propriétés des données :
+- **Variables Nominales** : utilisation de l'encodage par position sur l'axe (Bar Charts) pour faciliter la comparaison entre entités (équipes, arbitres).
+- **Variables Ordinales/Discrètes** : utilisation de l'ordre pour observer les distributions (Histogrammes) et les écarts (Boxplots).
+- **Variables Temporelles** : utilisation de l'axe horizontal pour représenter la continuité et les tendances (Line charts).
+
+#
+
 #### Limites du dataset
 
 Certaines variables (tirs, tirs cadrés, cartons, arbitres…) ne sont pas renseignées pour toutes les saisons, notamment les plus anciennes.
