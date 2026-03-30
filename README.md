@@ -155,24 +155,25 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 11 | Les équipes dominantes en tirs gagnent-elles réellement ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
 | 12 | Existe-t-il des matchs dominés mais perdus ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
 | 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff (HS − AS), FTR | Bar chart | Équilibre vs résultat |
+| 14 | Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ? | HomeTeam, HS, FTHG | Bar chart (Faceting) | Comparer les profils d'efficacité par équipe |
 
 
 ### 4. Discipline et impact sur le jeu
 
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
-| 14 | Les fautes influencent-elles le résultat du match ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
-| 15 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
-| 16 | Les cartons rouges ont-ils un impact sur le résultat ? | HR, FTR | Bar chart | Impact d’un événement critique |
-| 17 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
-| 18 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards (HY + AY + HR + AR) | Bar chart | Influence du contexte |
+| 15 | Les fautes influencent-elles le résultat du match ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
+| 16 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
+| 17 | Les cartons rouges ont-ils un impact sur le résultat ? | HR, FTR | Bar chart | Impact d’un événement critique |
+| 18 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
+| 19 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards (HY + AY + HR + AR) | Bar chart | Influence du contexte |
 
 
 ### 5. Évolution et vision globale
 
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
-| 19 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
-| 20 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards) | Heatmap | Vision globale des relations |
+| 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
+| 21 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards) | Heatmap | Vision globale des relations |
     
 
