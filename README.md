@@ -112,10 +112,11 @@ De plus, le dataset ne contient pas d’informations contextuelles (joueurs, ble
 
 ---
 
-## Questions de recherche
+## Plan d’analyse
 
 Afin de structurer notre analyse de manière cohérente, nous avons organisé nos questions comme une enquête progressive permettant de mieux comprendre les résultats des matchs de Premier League.
 
+**Notre analyse suivra une progression en cinq axes. Nous commencerons par décrire la structure générale des résultats du championnat, puis nous étudierons la dynamique temporelle des matchs. Nous chercherons ensuite à comprendre dans quelle mesure la domination offensive et la discipline influencent l’issue d’une rencontre, avant de terminer par une vision plus globale des évolutions saisonnières et des corrélations entre variables.**
 
 ### 1. Comprendre les résultats du championnat
 
