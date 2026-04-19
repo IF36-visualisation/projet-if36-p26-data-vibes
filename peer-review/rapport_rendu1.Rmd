@@ -1,1 +1,47 @@
+# Rendu 1
 
+## 1. Quelle est la répartition des résultats (domicile, nul, extérieur) ?
+
+*Cette partie sera complétée par Tatianna.*
+
+## 2. Existe-t-il un avantage du terrain ?
+
+Nous cherchons ici à savoir si le fait de jouer à domicile augmente les chances de victoire d’une équipe.
+La variable utilisée est `FTR` (*Full Time Result*), qui indique le résultat final du match :
+- `H` : victoire de l’équipe à domicile
+- `D` : match nul
+- `A` : victoire de l’équipe à l’extérieur
+
+Pour répondre à cette question, nous utilisons un diagramme en barres, car cette visualisation permet de comparer simplement les effectifs ou les proportions entre plusieurs catégories.
+
+```{r}
+library(tidyverse)
+
+epl <- read_csv("../data/results.csv")
+
+home_adv <- epl %>%
+  count(FTR) %>%
+  mutate(
+    proportion = n / sum(n),
+    Resultat = recode(FTR,
+                      "H" = "Victoire à domicile",
+                      "D" = "Match nul",
+                      "A" = "Victoire à l'extérieur")
+  )
+
+ggplot(home_adv, aes(x = Resultat, y = proportion)) +
+  geom_col(width = 0.7) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "Proportion des résultats des matchs de Premier League",
+    subtitle = "Mesure de l'avantage du terrain",
+    x = NULL,
+    y = "Proportion des matchs"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    axis.text.x = element_text(angle = 15, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
