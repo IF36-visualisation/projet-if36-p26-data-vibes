@@ -98,7 +98,8 @@ Plusieurs facteurs peuvent expliquer cet avantage : le soutien du public, la fam
 
 Il convient toutefois de rester prudent dans l’interprétation. Cette visualisation montre une tendance générale, mais elle ne permet pas, à elle seule, d’identifier précisément les causes de cet avantage. D’autres variables, comme la qualité relative des équipes ou l’évolution selon les saisons, pourraient également influencer ce résultat.
 
-En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
+En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
+
 
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
@@ -116,7 +117,7 @@ Pour comparer des catégories : noms des équipes en fonction d'une valeur numé
 * **Optimisation du tri** : les barres sont triées de la plus grande à la plus petite et selon les principes du cours, un graphique trié réduit la charge cognitive du lecteur en lui permettant d'identifier immédiatement la hiérarchie et les extrêmes.
 * **Comparaison directe** : cette représentation facilite la comparaison visuelle des longueurs de barres, mettant en évidence l'écart entre les leaders et le reste du classement.
 
-```{r question4, message=FALSE, warning=FALSE}
+```{r question4_a, message=FALSE, warning=FALSE}
 # Préparation des données : cumuler buts à domicile et à l'extérieur par équipe
 home_goals <- epl %>%
   group_by(HomeTeam) %>%
@@ -129,7 +130,7 @@ away_goals <- epl %>%
   rename(Team = AwayTeam)
 ```
 
-```{r question4, message=FALSE, warning=FALSE}
+```{r question4_b, message=FALSE, warning=FALSE}
 # Fusion et calcul du total
 top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
   mutate(GrandTotal = TotalHomeGoals + TotalAwayGoals) %>%
@@ -137,7 +138,7 @@ top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
 ```
 On se limite au top 15 pour une meilleure lisibilité.
 
-```{r question4, message=FALSE, warning=FALSE}
+```{r question4_c, message=FALSE, warning=FALSE}
 ggplot(top_teams, aes(x = reorder(Team, GrandTotal), y = GrandTotal)) +
   geom_col(fill = "darkgreen") +
   coord_flip() +
