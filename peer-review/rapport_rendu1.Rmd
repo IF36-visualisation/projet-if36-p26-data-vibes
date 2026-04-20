@@ -103,7 +103,49 @@ En conclusion, les données confirment bien l’existence d’un avantage du ter
 
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
-*Cette partie sera complétée par Francky.*
+### Question
+Nous cherchons à comprendre comment se distribue le nombre total de buts marqués par match en Premier League.  
+On peut supposer que la majorité des matchs comportent un nombre modéré de buts, avec peu de rencontres très riches en buts.
+
+### Visualisation
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+
+epl <- read_csv("C:/Users/Demo/Desktop/Projet_IF36/results.csv") %>%
+  
+# Création de la variable TotalGoals
+  mutate(TotalGoals = FTHG + FTAG)
+
+# Histogramme
+ggplot(epl, aes(x = TotalGoals)) +
+  geom_histogram(
+    binwidth = 1,
+    fill = "steelblue",
+    color = "black",
+    boundary = 0
+  ) +
+  scale_x_continuous(breaks = seq(0, 10, 1)) +
+  labs(
+    title = "Distribution du nombre de buts par match",
+    x = "Nombre total de buts",
+    y = "Nombre de matchs"
+  ) +
+  
+  theme_minimal()
+
+```
+
+### Interprétation
+
+L'histogramme montre que la majorité des matchs se concentrent entre 1 et 3 buts.
+
+On observe une diminution progressive du nombre de matchs lorsque le nombre total de buts augmente, ce qui indique que les rencontres très riches en buts restent rares.
+
+La distribution est asymétrique à droite, avec quelques valeurs élevées mais peu fréquentes.
+
+Ainsi, le graphique confirme notre hypothèse initiale : les matchs de Premier League présentent généralement un nombre modéré de buts.
 
 ## 4. Quelles équipes marquent le plus de buts ?
 
