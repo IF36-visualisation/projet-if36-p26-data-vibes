@@ -1,4 +1,44 @@
-# Rendu 1
+---
+title: "Rendu 1"
+author: "DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU Tatiana"
+date: "2026-04-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Introduction
+
+## 1. Données
+
+Le jeu de données étudié porte sur les matchs de Premier League anglaise et couvre plusieurs saisons (de 1993 à 2022). Il est fourni au format **CSV** et contient **11 113 observations** (matchs) et **23 variables**.
+
+Chaque observation correspond à un match et regroupe des informations détaillées sur :
+
+* **L'identité du match** : Saison, date, équipes à domicile (`HomeTeam`) et à l'extérieur (`AwayTeam`).
+* **Les scores** : Buts à la mi-temps (`HTHG`, `HTAG`) et au coup de sifflet final (`FTHG`, `FTAG`).
+* **Les statistiques de jeu** : Nombre de tirs (`HS`, `AS`), tirs cadrés (`HST`, `AST`), fautes commises (`HF`, `AF`), corners (`HC`, `AC`) et l'identité de l'arbitre (`Referee`).
+* **La discipline** : Cartons jaunes (`HY`, `AY`) et cartons rouges (`HR`, `AR`).
+
+Le dataset est structuré de manière à permettre une analyse comparative entre les performances à domicile et à l'extérieur, ainsi qu'une étude de l'évolution des statistiques de jeu sur près de trois décennies.
+
+## 2. Plan d'analyse
+
+Notre démarche d'analyse suit le cycle **Aquire > Filter > Mine > Refine** afin de transformer les données brutes en informations exploitables :
+
+1.  **Aquire & Filter (Traitement avec dplyr)** : Nettoyage des données, gestion des valeurs manquantes (`NA`) et création de variables calculées (comme le total de buts ou le cumul des cartons) pour garantir la fiabilité des analyses.
+2.  **Mine (Exploration statique avec ggplot2)** : Répondre à des questions ciblées pour valider nos premières hypothèses. Nous prévoyons d'explorer :
+    * **La performance** : Existe-t-il un avantage réel à jouer à domicile ? Quelles sont les équipes les plus prolifiques ?
+    * **La discipline** : Existe-t-il une corrélation entre les fautes et les cartons ? Les arbitres influencent-ils la sévérité du jeu ?
+    * **La prédiction** : Le score à la mi-temps permet-il d'anticiper avec fiabilité le résultat final ?
+3.  **Refine (Interactivité avec Shiny)** : Transformer ces visualisations en outils interactifs pour permettre à l'utilisateur de filtrer les résultats par saison ou par équipe, offrant ainsi une vision plus granulaire des données.
+
+Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie Factor** (concepts vus en cours) pour garantir que nos graphiques sont à la fois lisibles et honnêtes.
+
+---
+
+# Exploration des données
 
 ## 1. Quelle est la répartition des résultats (domicile, nul, extérieur) ?
 
@@ -58,4 +98,71 @@ Plusieurs facteurs peuvent expliquer cet avantage : le soutien du public, la fam
 
 Il convient toutefois de rester prudent dans l’interprétation. Cette visualisation montre une tendance générale, mais elle ne permet pas, à elle seule, d’identifier précisément les causes de cet avantage. D’autres variables, comme la qualité relative des équipes ou l’évolution selon les saisons, pourraient également influencer ce résultat.
 
-En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
+En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
+
+## 3. Quelle est la distribution du nombre de buts par match ?
+
+*Cette partie sera complétée par Francky.*
+
+## 4. Quelles équipes marquent le plus de buts ?
+
+### Hypothèse
+Nous supposons que les équipes historiques du "Big Six" : *Arsenal, Chelsea, Liverpool, Manchester City, Manchester United, Tottenham Hotspur* dominent largement ce classement.
+
+### Choix de la visualisation
+Pour comparer des catégories : noms des équipes en fonction d'une valeur numérique : total de buts, le diagramme en barres horizontales est la solution la plus adaptée pour les raisons suivantes :
+
+* **Lisibilité** : compte tenu du grand nombre d'équipes en Premier League, les noms seraient illisibles ou se chevaucheraient sur un axe horizontal (X) alors que l'orientation horizontale permet une lecture naturelle des noms de gauche à droite.
+* **Optimisation du tri** : les barres sont triées de la plus grande à la plus petite et selon les principes du cours, un graphique trié réduit la charge cognitive du lecteur en lui permettant d'identifier immédiatement la hiérarchie et les extrêmes.
+* **Comparaison directe** : cette représentation facilite la comparaison visuelle des longueurs de barres, mettant en évidence l'écart entre les leaders et le reste du classement.
+
+```{r question4, message=FALSE, warning=FALSE}
+# Préparation des données : cumuler buts à domicile et à l'extérieur par équipe
+home_goals <- epl %>%
+  group_by(HomeTeam) %>%
+  summarise(TotalHomeGoals = sum(FTHG, na.rm = TRUE)) %>%
+  rename(Team = HomeTeam)
+
+away_goals <- epl %>%
+  group_by(AwayTeam) %>%
+  summarise(TotalAwayGoals = sum(FTAG, na.rm = TRUE)) %>%
+  rename(Team = AwayTeam)
+```
+
+```{r question4, message=FALSE, warning=FALSE}
+# Fusion et calcul du total
+top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
+  mutate(GrandTotal = TotalHomeGoals + TotalAwayGoals) %>%
+  slice_max(GrandTotal, n = 15)
+```
+On se limite au top 15 pour une meilleure lisibilité.
+
+```{r question4, message=FALSE, warning=FALSE}
+ggplot(top_teams, aes(x = reorder(Team, GrandTotal), y = GrandTotal)) +
+  geom_col(fill = "darkgreen") +
+  coord_flip() +
+  labs(
+    title = "Top 15 des équipes les plus prolifiques",
+    subtitle = "Cumul des buts marqués (domicile + extérieur) depuis 1993",
+    x = "Équipes",
+    y = "Nombre total de buts"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.y = element_text(size = 10)
+  )
+```
+
+### Analyse des résultats
+Le graphique confirme la domination des clubs du "*Big Six*". Manchester United, Arsenal et Liverpool occupent les trois premières marches du podium.
+
+On observe un écrat marqué entre ces leaders historiques et le reste des équipes : seules les équipes de ce haut de tableau ont inscrits un nombre de buts suprieur à 1500 buts sur la période. Cette visualisation met en évidence une hiérarchie offensive très stable sur le long terme dans le championnat anglais.
+
+### Critique et limites
+Bien que ce graphique offre une vision globale efficace, il comporte certains biais qu'il est nécessaire de souligner :
+
+* **Biais de longévité** : en utilisant le cumul historique des buts, nous favorisons les équipes n'ayant jamais été reléguées; une équipe très offensive présente seulement 2 ou 3 saisons en Premier League paraîtra moins "prolifique" qu'une équipe moyenne présente depuis 30 ans.
+* **Normalisation (Lie Factor)** : pour une analyse plus "honnête" statistiquement, il serait pertinent de comparer ces données avec la moyenne de buts par match. Cela permettrait de minimiser l'effet du temps et d'identifier les équipes réellement qui sont à craindre devant le but.
+* **Respect du Data-to-Ink ratio** : nous avons choisi un diagramme à barres horizontales pour garantir la lisibilité des noms de clubs; l'utilisation d'une couleur unique *vert foncé* sans gradients pour ne pas distraire l'œil des valeurs réelles
+* **Absence de dynamique temporelle** : le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
