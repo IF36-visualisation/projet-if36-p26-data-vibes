@@ -212,9 +212,8 @@ Bien que ce graphique offre une vision globale efficace, il comporte certains bi
 * **Absence de dynamique temporelle** : le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
 
 
-## Question 5
+## 5. Les matchs sont-ils souvent décidés en seconde mi-temps ?
 
-**Les matchs sont-ils souvent décidés en seconde mi-temps ?**
 
 Il s'agit ici de comprendre la dynamique temporelle. Nous imaginons que La seconde mi-temps est plus décisive que la première, car les équipes s’adaptent tactiquement, la fatigue apparaît et les changements de joueurs influencent le jeu.
 
