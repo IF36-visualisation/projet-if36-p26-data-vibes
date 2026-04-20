@@ -58,7 +58,8 @@ Pour répondre à cette question, nous utilisons un diagramme en barres, car cet
 
 ```{r}
 
-
+# On compte le nombre de matchs pour chaque résultat final,
+# puis on calcule leur proportion sur l'ensemble des matchs
 
 home_adv <- epl %>%
   count(FTR) %>%
@@ -72,6 +73,7 @@ home_adv <- epl %>%
     )
   )
 
+# Diagramme en barres des proportions de résultats
 ggplot(home_adv, aes(x = Resultat, y = proportion)) +
   geom_col(width = 0.7) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
@@ -309,14 +311,18 @@ library(dplyr)
 library(ggplot2)
 library(readr)
 
+# On ajoute une variable représentant le total de buts par match
 epl <- read_csv("../data/results.csv") %>%
   mutate(TotalGoals = FTHG + FTAG)
 
+
+# Calcul de la moyenne de buts par saison
 season_goals <- epl %>%
   filter(!is.na(Season), !is.na(TotalGoals)) %>%
   group_by(Season) %>%
   summarise(MeanGoals = mean(TotalGoals), .groups = "drop")
 
+# Courbe d'évolution du nombre moyen de buts par saison
 ggplot(season_goals, aes(x = Season, y = MeanGoals, group = 1)) +
   geom_line(color = "steelblue", linewidth = 1) +
   geom_point(color = "steelblue", size = 2) +
