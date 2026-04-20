@@ -114,7 +114,7 @@ library(dplyr)
 library(ggplot2)
 library(readr)
 
-epl <- read_csv("C:/Users/Demo/Desktop/Projet_IF36/results.csv") %>%
+epl <- read_csv("../data/results.csv") %>%
   
 # Création de la variable TotalGoals
   mutate(TotalGoals = FTHG + FTAG)
