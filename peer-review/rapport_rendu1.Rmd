@@ -40,10 +40,6 @@ Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie 
 
 # Exploration des données
 
-## 1. Quelle est la répartition des résultats (domicile, nul, extérieur) ?
-
-*Cette partie sera complétée par Tatianna.*
-
 ## 2. Existe-t-il un avantage du terrain ?
 ### Hypothèse
 
@@ -171,3 +167,82 @@ Bien que ce graphique offre une vision globale efficace, il comporte certains bi
 * **Normalisation (Lie Factor)** : pour une analyse plus "honnête" statistiquement, il serait pertinent de comparer ces données avec la moyenne de buts par match. Cela permettrait de minimiser l'effet du temps et d'identifier les équipes réellement qui sont à craindre devant le but.
 * **Respect du Data-to-Ink ratio** : nous avons choisi un diagramme à barres horizontales pour garantir la lisibilité des noms de clubs; l'utilisation d'une couleur unique *vert foncé* sans gradients pour ne pas distraire l'œil des valeurs réelles
 * **Absence de dynamique temporelle** : le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
+
+
+## Question 5
+
+**Les matchs sont-ils souvent décidés en seconde mi-temps ?**
+
+Il s'agit ici de comprendre la dynamique temporelle. Nous imaginons que La seconde mi-temps est plus décisive que la première, car les équipes s’adaptent tactiquement, la fatigue apparaît et les changements de joueurs influencent le jeu.
+
+On s’attend donc à observer :
+
+- Davantage de buts en seconde mi-temps 
+
+- De potentiellement des changements de résultat après la mi-temps.
+
+
+
+```{r}
+# Import des librairies
+
+library(ggplot2)
+library(dplyr)
+
+# Lecture du dataset
+
+EPL <- read.csv("C:/Users/tatia/Downloads/IF36/results.csv")
+
+# Nettoyage de données
+
+EPL_clean <- EPL %>%
+  filter(!is.na(HTR), !is.na(FTR))
+
+# Préparation de données
+
+EPL_clean <- EPL_clean %>%
+  mutate(
+    Decision = ifelse(HTR == FTR,
+                      "Résultat inchangé",
+                      "Résultat changé en 2e mi-temps")
+  )
+
+# Visualisation
+
+EPL_clean %>%
+  count(Decision) %>%
+  mutate(prop = n / sum(n)) %>%
+  ggplot(aes(x = Decision, y = prop,fill = Decision)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Part des matchs décidés en seconde mi-temps",
+    x = "Type d'évolution du match",
+    y = "Proportion de matchs",
+    fill = "Catégorie"
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  
+  theme_minimal()
+
+```
+
+## Interprétation
+
+Ce graphique présente la répartition des matchs selon l’évolution du résultat entre la mi-temps et la fin du match on observe donc :
+
+environ ~61 % de  résultat inchangé  et ~39 % de Résultat changé en seconde mi-temps.
+
+Cela nous permet de répondre à la question posée en disant que,les matchs ne sont pas majoritairement décidés en seconde mi-temps, mais ont une proportion significative.
+
+L'hypothèse du début n'est donc pas vérifiée
+
+Le fait que plus de la moitié des matchs gardent le même résultat suggère que la première mi-temps joue déjà un rôle déterminant dans l’issue du match.
+Une équipe qui mène à la pause a donc de fortes chances de conserver son avantage.
+
+## Limite 
+
+Même si le résultat ne change pas (HTR = FTR), cela ne signifie pas que :la seconde mi-temps n’a pas été importante
+
+Par exemple : si on a un score de 0-0 à la mi-temps et 2-2 à la fin,on voit que le résultat ne change pas (toujours un match nul), mais match très actif en seconde période.
+
+Donc cette analyse capture les changements d’issue, mais pas la dynamique réelle du match.
