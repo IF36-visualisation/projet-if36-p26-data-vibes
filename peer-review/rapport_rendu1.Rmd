@@ -45,8 +45,11 @@ Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie 
 *Cette partie sera complétée par Tatianna.*
 
 ## 2. Existe-t-il un avantage du terrain ?
+### Hypothèse
 
 Nous cherchons ici à savoir si le fait de jouer à domicile augmente les chances de victoire d’une équipe.
+
+### Choix de la visualisation
 La variable utilisée est `FTR` (*Full Time Result*), qui indique le résultat final du match :
 - `H` : victoire de l’équipe à domicile
 - `D` : match nul
@@ -89,13 +92,14 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
     panel.grid.minor = element_blank()
   )
 ```
-
+### Analyse des résultats
 Le graphique montre que les victoires à domicile sont les plus fréquentes en Premier League, avec une proportion d’environ 45 % des matchs. À l’inverse, les victoires à l’extérieur représentent une part plus faible, autour de 29 %, tandis que les matchs nuls se situent entre les deux, avec environ 26 %.
 
 Cette différence met clairement en évidence l’existence d’un avantage du terrain. Le fait de jouer à domicile semble offrir un contexte plus favorable à la performance, ce qui augmente les chances de victoire de l’équipe qui reçoit.
 
 Plusieurs facteurs peuvent expliquer cet avantage : le soutien du public, la familiarité avec le stade, l’absence de déplacement et, éventuellement, une pression supplémentaire exercée sur l’équipe visiteuse.
 
+### Critique et limites
 Il convient toutefois de rester prudent dans l’interprétation. Cette visualisation montre une tendance générale, mais elle ne permet pas, à elle seule, d’identifier précisément les causes de cet avantage. D’autres variables, comme la qualité relative des équipes ou l’évolution selon les saisons, pourraient également influencer ce résultat.
 
 En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
