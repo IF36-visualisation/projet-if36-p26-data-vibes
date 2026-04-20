@@ -191,16 +191,16 @@ library(dplyr)
 
 # Lecture du dataset
 
-EPL <- read.csv("C:/Users/tatia/Downloads/IF36/results.csv")
+epl <- read_csv("../data/results.csv")
 
 # Nettoyage de données
 
-EPL_clean <- EPL %>%
+epl_clean <- epl %>%
   filter(!is.na(HTR), !is.na(FTR))
 
 # Préparation de données
 
-EPL_clean <- EPL_clean %>%
+epl_clean <- epl_clean %>%
   mutate(
     Decision = ifelse(HTR == FTR,
                       "Résultat inchangé",
@@ -209,7 +209,7 @@ EPL_clean <- EPL_clean %>%
 
 # Visualisation
 
-EPL_clean %>%
+epl_clean %>%
   count(Decision) %>%
   mutate(prop = n / sum(n)) %>%
   ggplot(aes(x = Decision, y = prop,fill = Decision)) +
