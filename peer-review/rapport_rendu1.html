@@ -441,7 +441,10 @@ Result</em>), qui indique le résultat final du match : - <code>H</code>
 <p>Pour répondre à cette question, nous utilisons un diagramme en
 barres, car cette visualisation permet de comparer simplement les
 effectifs ou les proportions entre plusieurs catégories.</p>
-<pre class="r"><code>home_adv &lt;- epl %&gt;%
+<pre class="r"><code># On compte le nombre de matchs pour chaque résultat final,
+# puis on calcule leur proportion sur l&#39;ensemble des matchs
+
+home_adv &lt;- epl %&gt;%
   count(FTR) %&gt;%
   mutate(
     proportion = n / sum(n),
@@ -453,6 +456,7 @@ effectifs ou les proportions entre plusieurs catégories.</p>
     )
   )
 
+# Diagramme en barres des proportions de résultats
 ggplot(home_adv, aes(x = Resultat, y = proportion)) +
   geom_col(width = 0.7) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
@@ -758,6 +762,7 @@ de buts.</p>
 library(ggplot2)
 library(readr)
 
+# On ajoute une variable représentant le total de buts par match
 epl &lt;- read_csv(&quot;../data/results.csv&quot;) %&gt;%
   mutate(TotalGoals = FTHG + FTAG)</code></pre>
 <pre><code>## Rows: 11113 Columns: 23
@@ -769,11 +774,13 @@ epl &lt;- read_csv(&quot;../data/results.csv&quot;) %&gt;%
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>season_goals &lt;- epl %&gt;%
+<pre class="r"><code># Calcul de la moyenne de buts par saison
+season_goals &lt;- epl %&gt;%
   filter(!is.na(Season), !is.na(TotalGoals)) %&gt;%
   group_by(Season) %&gt;%
   summarise(MeanGoals = mean(TotalGoals), .groups = &quot;drop&quot;)
 
+# Courbe d&#39;évolution du nombre moyen de buts par saison
 ggplot(season_goals, aes(x = Season, y = MeanGoals, group = 1)) +
   geom_line(color = &quot;steelblue&quot;, linewidth = 1) +
   geom_point(color = &quot;steelblue&quot;, size = 2) +
