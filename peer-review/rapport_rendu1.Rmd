@@ -287,3 +287,60 @@ Même si le résultat ne change pas (HTR = FTR), cela ne signifie pas que :la se
 Par exemple : si on a un score de 0-0 à la mi-temps et 2-2 à la fin,on voit que le résultat ne change pas (toujours un match nul), mais match très actif en seconde période.
 
 Donc cette analyse capture les changements d’issue, mais pas la dynamique réelle du match.
+
+---
+.
+.
+.
+.
+---
+
+## Question 20 — Le nombre de buts évolue-t-il selon les saisons ?
+
+### Hypothèse
+
+Nous cherchons à savoir si le nombre moyen de buts marqués par match évolue au fil des saisons de Premier League.
+
+On peut supposer que certaines saisons sont plus offensives que d’autres, ce qui pourrait se traduire par des variations du nombre moyen de buts.
+
+### Visualisation
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+
+epl <- read_csv("../data/results.csv") %>%
+  mutate(TotalGoals = FTHG + FTAG)
+
+season_goals <- epl %>%
+  filter(!is.na(Season), !is.na(TotalGoals)) %>%
+  group_by(Season) %>%
+  summarise(MeanGoals = mean(TotalGoals), .groups = "drop")
+
+ggplot(season_goals, aes(x = Season, y = MeanGoals, group = 1)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue", size = 2) +
+  labs(
+    title = "Évolution du nombre moyen de buts par match selon les saisons",
+    x = "Saison",
+    y = "Nombre moyen de buts"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+
+### Interprétation
+
+Le graphique montre l’évolution du nombre moyen de buts par match au fil des saisons de Premier League.
+
+On observe que cette moyenne reste relativement stable, généralement comprise entre 2.5 et 2.8 buts par match. Cela signifie que les rencontres comportent en moyenne entre 2 et 3 buts, ce qui traduit un bon équilibre entre phases offensives et défensives dans le championnat.
+
+Cependant, on remarque certaines fluctuations selon les saisons. Par exemple, une baisse notable autour des saisons 2005–2008 suggère une période plus défensive, tandis qu’une augmentation après 2010 indique un jeu plus offensif, avec davantage d’occasions et de buts marqués.
+
+Depuis les années récentes, la moyenne tend légèrement à augmenter, ce qui peut s’expliquer par l’évolution du football moderne : intensité plus élevée, stratégies offensives plus développées et amélioration des performances des joueurs.
+
+Ainsi, même si le nombre de buts reste globalement stable, on observe une légère tendance à l’augmentation, traduisant un championnat de plus en plus spectaculaire.
