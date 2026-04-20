@@ -7,6 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+epl <- read_csv("../data/results.csv")
 ```
 # Introduction
 
@@ -55,9 +58,7 @@ Pour répondre à cette question, nous utilisons un diagramme en barres, car cet
 
 ```{r}
 
-library(tidyverse)
 
-epl <- read_csv("../data/results.csv")
 
 home_adv <- epl %>%
   count(FTR) %>%
@@ -191,7 +192,6 @@ library(dplyr)
 
 # Lecture du dataset
 
-epl <- read_csv("../data/results.csv")
 
 # Nettoyage de données
 
