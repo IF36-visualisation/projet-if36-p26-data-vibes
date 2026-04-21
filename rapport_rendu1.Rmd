@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 
-epl <- read_csv("../data/results.csv")
+epl <- read_csv("data/results.csv")
 ```
 # Introduction
 
@@ -56,7 +56,7 @@ La variable utilisée est `FTR` (*Full Time Result*), qui indique le résultat f
 
 Pour répondre à cette question, nous utilisons un diagramme en barres, car cette visualisation permet de comparer simplement les effectifs ou les proportions entre plusieurs catégories.
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
 # On compte le nombre de matchs pour chaque résultat final,
 # puis on calcule leur proportion sur l'ensemble des matchs
@@ -91,6 +91,7 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 Le graphique montre que les victoires à domicile sont les plus fréquentes en Premier League, avec une proportion d’environ 45 % des matchs. À l’inverse, les victoires à l’extérieur représentent une part plus faible, autour de 29 %, tandis que les matchs nuls se situent entre les deux, avec environ 26 %.
 
@@ -111,12 +112,12 @@ Nous cherchons à comprendre comment se distribue le nombre total de buts marqu�
 On peut supposer que la majorité des matchs comportent un nombre modéré de buts, avec peu de rencontres très riches en buts.
 
 ### Visualisation
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
 library(readr)
 
-epl <- read_csv("../data/results.csv") %>%
+epl <- read_csv("data/results.csv") %>%
   
 # Création de la variable TotalGoals
   mutate(TotalGoals = FTHG + FTAG)
@@ -162,7 +163,7 @@ Pour comparer des catégories : noms des équipes en fonction d'une valeur numé
 * **Optimisation du tri** : les barres sont triées de la plus grande à la plus petite et selon les principes du cours, un graphique trié réduit la charge cognitive du lecteur en lui permettant d'identifier immédiatement la hiérarchie et les extrêmes.
 * **Comparaison directe** : cette représentation facilite la comparaison visuelle des longueurs de barres, mettant en évidence l'écart entre les leaders et le reste du classement.
 
-```{r question4_a, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Préparation des données : cumuler buts à domicile et à l'extérieur par équipe
 home_goals <- epl %>%
   group_by(HomeTeam) %>%
@@ -175,7 +176,7 @@ away_goals <- epl %>%
   rename(Team = AwayTeam)
 ```
 
-```{r question4_b, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Fusion et calcul du total
 top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
   mutate(GrandTotal = TotalHomeGoals + TotalAwayGoals) %>%
@@ -183,7 +184,7 @@ top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
 ```
 On se limite au top 15 pour une meilleure lisibilité.
 
-```{r question4_c, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(top_teams, aes(x = reorder(Team, GrandTotal), y = GrandTotal)) +
   geom_col(fill = "darkgreen") +
   coord_flip() +
@@ -227,7 +228,7 @@ On s’attend donc à observer :
 
 
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Import des librairies
 
 library(ggplot2)
@@ -306,13 +307,13 @@ Nous cherchons à savoir si le nombre moyen de buts marqués par match évolue a
 On peut supposer que certaines saisons sont plus offensives que d’autres, ce qui pourrait se traduire par des variations du nombre moyen de buts.
 
 ### Visualisation
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
 library(readr)
 
 # On ajoute une variable représentant le total de buts par match
-epl <- read_csv("../data/results.csv") %>%
+epl <- read_csv("data/results.csv") %>%
   mutate(TotalGoals = FTHG + FTAG)
 
 
