@@ -1,8 +1,11 @@
 ---
 title: "Rendu 1"
-author: "DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU Tatiana"
+author: DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU
+  Tatiana
 date: "2026-04-20"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -41,26 +44,17 @@ Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie 
 
 ---
 
-# Exploration des données
-
 ## 2. Existe-t-il un avantage du terrain ?
+
 ### Hypothèse
 
-Nous cherchons ici à savoir si le fait de jouer à domicile augmente les chances de victoire d’une équipe.
+Nous supposons que les équipes jouant à domicile gagnent plus souvent que les équipes à l’extérieur.
 
 ### Choix de la visualisation
-La variable utilisée est `FTR` (*Full Time Result*), qui indique le résultat final du match :
-- `H` : victoire de l’équipe à domicile
-- `D` : match nul
-- `A` : victoire de l’équipe à l’extérieur
 
-Pour répondre à cette question, nous utilisons un diagramme en barres, car cette visualisation permet de comparer simplement les effectifs ou les proportions entre plusieurs catégories.
+Nous utilisons un diagramme en barres pour comparer les proportions de victoires à domicile, de matchs nuls et de victoires à l’extérieur. Cette visualisation permet de voir rapidement si les résultats sont équilibrés ou non.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-
-# On compte le nombre de matchs pour chaque résultat final,
-# puis on calcule leur proportion sur l'ensemble des matchs
-
 home_adv <- epl %>%
   count(FTR) %>%
   mutate(
@@ -73,13 +67,12 @@ home_adv <- epl %>%
     )
   )
 
-# Diagramme en barres des proportions de résultats
 ggplot(home_adv, aes(x = Resultat, y = proportion)) +
   geom_col(width = 0.7) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title = "Proportion des résultats des matchs de Premier League",
-    subtitle = "Mesure de l'avantage du terrain",
+    title = "Répartition des résultats des matchs",
+    subtitle = "Premier League, 1993-2022",
     x = NULL,
     y = "Proportion des matchs"
   ) +
@@ -91,19 +84,15 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
     panel.grid.minor = element_blank()
   )
 ```
-
 ### Analyse des résultats
-Le graphique montre que les victoires à domicile sont les plus fréquentes en Premier League, avec une proportion d’environ 45 % des matchs. À l’inverse, les victoires à l’extérieur représentent une part plus faible, autour de 29 %, tandis que les matchs nuls se situent entre les deux, avec environ 26 %.
 
-Cette différence met clairement en évidence l’existence d’un avantage du terrain. Le fait de jouer à domicile semble offrir un contexte plus favorable à la performance, ce qui augmente les chances de victoire de l’équipe qui reçoit.
+Le graphique montre que les victoires à domicile sont plus fréquentes que les victoires à l’extérieur. Les matchs nuls occupent une position intermédiaire.
 
-Plusieurs facteurs peuvent expliquer cet avantage : le soutien du public, la familiarité avec le stade, l’absence de déplacement et, éventuellement, une pression supplémentaire exercée sur l’équipe visiteuse.
+Ce résultat confirme l’existence d’un avantage du terrain en Premier League : jouer à domicile semble augmenter les chances de victoire.
 
-### Critique et limites
-Il convient toutefois de rester prudent dans l’interprétation. Cette visualisation montre une tendance générale, mais elle ne permet pas, à elle seule, d’identifier précisément les causes de cet avantage. D’autres variables, comme la qualité relative des équipes ou l’évolution selon les saisons, pourraient également influencer ce résultat.
+### Limites
 
-En conclusion, les données confirment bien l’existence d’un avantage du terrain en Premier League, puisque les équipes à domicile gagnent plus souvent que les équipes à l’extérieur.
-
+Cette analyse montre une tendance générale, mais elle ne permet pas d’expliquer précisément les causes de cet avantage. D’autres facteurs, comme le niveau des équipes ou la saison, pourraient aussi influencer les résultats.
 
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
@@ -290,6 +279,293 @@ Même si le résultat ne change pas (HTR = FTR), cela ne signifie pas que :la se
 Par exemple : si on a un score de 0-0 à la mi-temps et 2-2 à la fin,on voit que le résultat ne change pas (toujours un match nul), mais match très actif en seconde période.
 
 Donc cette analyse capture les changements d’issue, mais pas la dynamique réelle du match.
+
+
+## Question 6 — Quelle proportion de matchs connaît un retournement ?
+
+### Hypothèse
+
+Nous supposons que les retournements complets sont rares en Premier League. Une équipe qui mène à la mi-temps conserve souvent un avantage important jusqu’à la fin du match.
+
+### Choix de la visualisation
+
+Nous utilisons un diagramme en anneau afin de représenter la part des matchs avec retournement complet dans l’ensemble des matchs. Ce choix est adapté car la question porte principalement sur une proportion globale.
+
+Dans cette analyse, un retournement complet correspond aux situations où l’équipe qui mène à la mi-temps perd finalement le match : `HTR = H` et `FTR = A`, ou `HTR = A` et `FTR = H`.
+
+Les matchs passant d’un score nul à une victoire ne sont donc pas considérés ici comme des retournements complets.
+```{r q6-retournement, echo=FALSE, message=FALSE, warning=FALSE}
+retournement_data <- epl %>%
+  mutate(
+    Retournement = case_when(
+      HTR == "H" & FTR == "A" ~ "Retournement",
+      HTR == "A" & FTR == "H" ~ "Retournement",
+      TRUE ~ "Pas de retournement"
+    )
+  ) %>%
+  count(Retournement) %>%
+  mutate(
+    Pourcentage = round(100 * n / sum(n), 1),
+    Label = paste0(Retournement, "\n", Pourcentage, " %")
+  )
+
+retournement_pct <- retournement_data %>%
+  filter(Retournement == "Retournement") %>%
+  pull(Pourcentage)
+
+ggplot(retournement_data, aes(x = 2, y = Pourcentage, fill = Retournement)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  xlim(0.5, 2.5) +
+  geom_text(
+    aes(label = Label),
+    position = position_stack(vjust = 0.5),
+    size = 4
+  ) +
+  labs(
+    title = "Part des matchs avec retournement complet",
+    subtitle = "Premier League, 1993-2022",
+    fill = NULL
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+
+### Analyse des résultats
+
+Le diagramme montre que les retournements complets représentent une faible part des matchs étudiés. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
+
+Ce résultat confirme l’hypothèse : le fait de mener à la mi-temps constitue généralement un avantage important pour l’issue du match.
+
+### Critique et limites
+
+Cette analyse repose uniquement sur le résultat à la mi-temps et le résultat final. Elle ne prend pas en compte le moment exact des buts, les cartons rouges, les blessures ou les changements tactiques.
+
+De plus, les matchs qui passent d’un score nul à une victoire peuvent aussi être décisifs, mais ils ne sont pas considérés ici comme des retournements complets.
+
+## 7. Le résultat à la mi-temps prédit-il le résultat final ?
+
+### Hypothèse
+
+Nous supposons que le résultat à la mi-temps est fortement lié au résultat final. Une équipe qui mène à la pause a plus de chances de gagner le match.
+
+### Choix de la visualisation
+
+Nous utilisons une heatmap pour croiser le résultat à la mi-temps et le résultat final. Cette visualisation permet d’identifier rapidement les situations les plus fréquentes.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+mi_temps_final <- epl %>%
+  filter(!is.na(HTR), !is.na(FTR)) %>%
+  count(HTR, FTR) %>%
+  group_by(HTR) %>%
+  mutate(
+    proportion = n / sum(n),
+    Pourcentage = round(100 * proportion, 1),
+    text_color = ifelse(Pourcentage >= 50, "white", "black"),
+    HTR_label = recode(
+      HTR,
+      "H" = "Domicile mène",
+      "D" = "Match nul",
+      "A" = "Extérieur mène"
+    ),
+    FTR_label = recode(
+      FTR,
+      "H" = "Victoire domicile",
+      "D" = "Match nul",
+      "A" = "Victoire extérieur"
+    )
+  )
+
+ggplot(mi_temps_final, aes(x = FTR_label, y = HTR_label, fill = Pourcentage)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = paste0(Pourcentage, " %"), color = text_color), size = 4) +
+  scale_color_identity() +
+  scale_fill_gradient(
+    low = "#deebf7",
+    high = "#3182bd"
+  ) +
+  labs(
+    title = "Lien entre le résultat à la mi-temps et le résultat final",
+    subtitle = "Pourcentage calculé pour chaque situation à la mi-temps",
+    x = "Résultat final",
+    y = "Résultat à la mi-temps",
+    fill = "Pourcentage"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 15, hjust = 1)
+  )
+```
+
+### Analyse des résultats
+
+La heatmap montre que le résultat à la mi-temps est fortement lié au résultat final. Lorsqu’une équipe mène à la pause, elle conserve souvent son avantage jusqu’à la fin du match.
+
+En revanche, les matchs nuls à la mi-temps donnent des résultats plus variés. Le résultat à la pause constitue donc un bon indicateur de l’issue du match, sans permettre une prédiction parfaite.
+
+### Limites
+
+Cette analyse met en évidence une tendance générale, mais elle ne prend pas en compte d’autres facteurs, comme les buts en seconde période, les cartons rouges, les blessures ou les changements tactiques.
+
+## 8. Les équipes qui tirent le plus gagnent-elles ?
+
+### Hypothèse
+
+Nous supposons qu’une équipe qui tire davantage que son adversaire a plus de chances de gagner le match.
+
+### Choix de la visualisation
+
+Nous utilisons un diagramme en barres empilées à 100 % afin de comparer la répartition des résultats finaux selon la différence de tirs entre les deux équipes. Cette visualisation permet d’observer si l’équipe qui tire le plus gagne plus souvent.
+
+```{r q8-shotdiff-group, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+shots_group <- epl %>%
+  filter(!is.na(HS), !is.na(AS), !is.na(FTR)) %>%
+  mutate(
+    ShotDiff = HS - AS,
+    Groupe_tirs = case_when(
+      ShotDiff <= -5 ~ "Extérieur +",
+      ShotDiff < 0 ~ "Extérieur léger +",
+      ShotDiff == 0 ~ "Égalité",
+      ShotDiff <= 5 ~ "Domicile léger +",
+      TRUE ~ "Domicile +"
+    ),
+    Groupe_tirs = factor(
+      Groupe_tirs,
+      levels = c(
+        "Extérieur +",
+        "Extérieur léger +",
+        "Égalité",
+        "Domicile léger +",
+        "Domicile +"
+      )
+    ),
+    Resultat = recode(
+      FTR,
+      "H" = "Victoire domicile",
+      "D" = "Match nul",
+      "A" = "Victoire extérieur"
+    )
+  )
+
+ggplot(shots_group, aes(x = Groupe_tirs, fill = Resultat)) +
+  geom_bar(position = "fill", width = 0.75) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Résultat final selon la différence de tirs",
+    subtitle = "Comparaison des résultats selon l’équipe qui tire le plus",
+    x = "Différence de tirs",
+    y = "Proportion des matchs",
+    fill = "Résultat final"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    axis.text.x = element_text(angle = 20, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Analyse des résultats
+
+Le graphique montre que lorsque l’équipe à domicile tire davantage, la proportion de victoires à domicile augmente nettement. À l’inverse, lorsque l’équipe à l’extérieur tire davantage, les victoires à l’extérieur deviennent plus fréquentes.
+
+Lorsque le nombre de tirs est proche ou égal, les résultats sont plus équilibrés. Ces observations suggèrent donc qu’il existe un lien entre le nombre de tirs et la victoire : l’équipe qui tire le plus a généralement plus de chances de gagner.
+
+### Limites
+
+Cette analyse repose sur le nombre total de tirs, mais elle ne prend pas en compte leur qualité. Un tir lointain et un tir très dangereux sont comptés de la même manière. Pour compléter l’analyse, il serait utile d’étudier les tirs cadrés ou d’autres indicateurs d’efficacité offensive.
+
+
+## 9. Les tirs cadrés sont-ils plus déterminants que les tirs ?
+
+### Hypothèse
+
+Dans la question précédente, nous avons observé que l’équipe qui tire davantage a généralement plus de chances de gagner. Nous supposons ici que les tirs cadrés sont encore plus déterminants que les tirs totaux, car ils traduisent des occasions plus dangereuses.
+
+### Choix de la visualisation
+
+Nous utilisons le même type de graphique que dans la question précédente afin de faciliter la comparaison. Le diagramme en barres empilées à 100 % permet d’observer la répartition des résultats finaux selon la différence de tirs cadrés entre les deux équipes.
+
+```{r q9-data, echo=FALSE, message=FALSE, warning=FALSE}
+efficacite_tirs <- epl %>%
+  filter(
+    !is.na(HS), !is.na(AS),
+    !is.na(HST), !is.na(AST),
+    !is.na(FTHG), !is.na(FTAG)
+  ) %>%
+  mutate(
+    TotalShots = HS + AS,
+    TotalShotsTarget = HST + AST,
+    TotalGoals = FTHG + FTAG
+  )
+```
+
+```{r q9-shot-target-diff, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+shots_target_group <- epl %>%
+  filter(!is.na(HST), !is.na(AST), !is.na(FTR)) %>%
+  mutate(
+    ShotTargetDiff = HST - AST,
+    Groupe_cadres = case_when(
+      ShotTargetDiff <= -3 ~ "Extérieur +",
+      ShotTargetDiff < 0 ~ "Extérieur léger +",
+      ShotTargetDiff == 0 ~ "Égalité",
+      ShotTargetDiff <= 3 ~ "Domicile léger +",
+      TRUE ~ "Domicile +"
+    ),
+    Groupe_cadres = factor(
+      Groupe_cadres,
+      levels = c(
+        "Extérieur +",
+        "Extérieur léger +",
+        "Égalité",
+        "Domicile léger +",
+        "Domicile +"
+      )
+    ),
+    Resultat = recode(
+      FTR,
+      "H" = "Victoire domicile",
+      "D" = "Match nul",
+      "A" = "Victoire extérieur"
+    )
+  )
+
+ggplot(shots_target_group, aes(x = Groupe_cadres, fill = Resultat)) +
+  geom_bar(position = "fill", width = 0.75) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Résultat final selon la différence de tirs cadrés",
+    subtitle = "Comparaison des résultats selon l’équipe qui cadre le plus",
+    x = "Différence de tirs cadrés",
+    y = "Proportion des matchs",
+    fill = "Résultat final"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    axis.text.x = element_text(angle = 20, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Analyse des résultats
+
+Le graphique prolonge l’analyse de la question précédente. On observe que l’équipe qui cadre davantage a généralement plus de chances de gagner le match.
+
+La relation semble plus nette que pour les tirs totaux : lorsque l’écart de tirs cadrés augmente en faveur d’une équipe, sa probabilité de victoire augmente aussi. Cela suggère que les tirs cadrés sont plus déterminants que le simple volume de tirs.
+
+### Limites
+
+Cette analyse ne prend pas en compte la qualité exacte des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière.
 
 ---
 .
