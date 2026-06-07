@@ -178,8 +178,8 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 21 | Les équipes les plus offensives sont-elles aussi les plus efficaces ? | HomeTeam, AwayTeam, TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter plot | Comparer volume offensif et efficacité offensive |
 
 
-**Question abandonnée :**
-Après discussion avec l'enseignant, cette question a été retirée car elle était jugée trop générale et peu interprétable dans le cadre de notre analyse. Une heatmap de corrélation globale permet d'identifier des relations statistiques entre variables, mais ne répond pas à une problématique footballistique précise et risque de produire des résultats difficiles à exploiter.
+**Modification du plan d'analyse :**
+Après discussion avec l'enseignant, cette question a été retirée car elle était jugée trop générale et peu interprétable dans le cadre de notre analyse. Une heatmap de corrélation globale permet d'identifier des relations statistiques entre variables, mais elle ne répond pas directement à une problématique métier ou footballistique clairement définie. Les résultats obtenus auraient été difficiles à interpréter dans le cadre de notre analyse exploratoire.
 
 
 ---
