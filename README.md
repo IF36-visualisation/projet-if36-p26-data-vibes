@@ -179,7 +179,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 
 
 **Modification du plan d'analyse :**
-Après discussion avec l'enseignant, cette question a été retirée car elle était jugée trop générale et peu interprétable dans le cadre de notre analyse. Une heatmap de corrélation globale permet d'identifier des relations statistiques entre variables, mais elle ne répond pas directement à une problématique métier ou footballistique clairement définie. Les résultats obtenus auraient été difficiles à interpréter dans le cadre de notre analyse exploratoire.
+Une heatmap de corrélation globale permet d'identifier des relations statistiques entre variables, mais elle ne répond pas directement à une problématique métier ou footballistique clairement définie. Les résultats obtenus auraient été difficiles à interpréter dans le cadre de notre analyse exploratoire.
 
 
 ---
