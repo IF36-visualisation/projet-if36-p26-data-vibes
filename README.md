@@ -154,7 +154,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 10 |~~Existe-t-il une relation entre tirs et buts ?~~<br> | ~~TotalShots (HS + AS), TotalGoals (FTHG + FTAG)~~<br> | ~~Scatter~~<br> | ~~Corrélation |
 | 11 | ~~Les équipes dominantes en tirs gagnent-elles réellement ?~~<br>La quantité de tirs garantit-elle la victoire à coup sûr ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
 | 12 | ~~Existe-t-il des matchs dominés mais perdus ?~~<br>Quelle est la fréquence des hold-ups (matchs dominés aux tirs mais perdus) ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
-| 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff (HS − AS), FTR | Bar chart | Équilibre vs résultat |
+| 13 | ~~Les matchs équilibrés en tirs finissent-ils plus souvent en nul ?~~<br>Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ? | TotalGoals (FTHG + FTAG), GoalDiff \|FTHG - FTAG\| | Scatter plot | Comparer intensité offensive et équilibre du score |
 | 14 | Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ? | HomeTeam, HS, FTHG | Bar chart (Faceting) | Comparer les profils d'efficacité par équipe |
 
 
