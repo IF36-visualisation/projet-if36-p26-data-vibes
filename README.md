@@ -152,8 +152,8 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 8 | Les équipes qui tirent le plus gagnent-elles ? | HS, AS, FTR | Boxplot | Tester la domination offensive |
 | 9 | Les tirs cadrés sont-ils plus déterminants que les tirs ? | HST, HS, TotalGoals (FTHG + FTAG) | Scatter | Mesurer l’efficacité |
 | 10 | Existe-t-il une relation entre tirs et buts ? | TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter | Corrélation |
-| 11 | Les équipes dominantes en tirs gagnent-elles réellement ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
-| 12 | Existe-t-il des matchs dominés mais perdus ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
+| 11 | ~~Les équipes dominantes en tirs gagnent-elles réellement ?~~<br>La quantité de tirs garantit-elle la victoire à coup sûr ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
+| 12 | ~~Existe-t-il des matchs dominés mais perdus ?~~<br>Quelle est la fréquence des hold-ups (matchs dominés aux tirs mais perdus) ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
 | 13 | Les matchs équilibrés en tirs finissent-ils plus souvent en nul ? | ShotDiff (HS − AS), FTR | Bar chart | Équilibre vs résultat |
 | 14 | Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ? | HomeTeam, HS, FTHG | Bar chart (Faceting) | Comparer les profils d'efficacité par équipe |
 
@@ -162,7 +162,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
-| 15 | Les fautes influencent-elles le résultat du match ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
+| 15 | ~~Les fautes influencent-elles le résultat du match ?~~<br>L'agressivité sur le terrain (fautes) pénalise-t-elle le résultat final ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
 | 16 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
 | 17 | Les cartons rouges ont-ils un impact sur le résultat ? | HR, FTR | Bar chart | Impact d’un événement critique |
 | 18 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
@@ -176,6 +176,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
 | 21 | ~~Quelles variables sont les plus corrélées entre elles ?~~ | ~~Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards)~~ | ~~Heatmap~~ | ~~Vision globale des relations~~ |
 | 21 | Les équipes les plus offensives sont-elles aussi les plus efficaces ? | HomeTeam, AwayTeam, TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter plot | Comparer volume offensif et efficacité offensive |
+| 22 | Le style de jeu général de la Premier League est-il devenu plus propre ou plus indiscipliné au fil des décennies ? | Season, TotalFouls, TotalCards | Multi-line chart / Facet | Analyser l'évolution de la discipline historique |
 
 
 **Modification du plan d'analyse :**
