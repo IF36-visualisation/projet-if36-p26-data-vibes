@@ -150,7 +150,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
 | 8 | ~~Les équipes qui tirent le plus gagnent-elles ?~~<br>La différence de tirs entre les deux équipes est-elle associée au résultat final ? | HS, AS, FTR | Boxplot | Tester la domination offensive |
-| 9 | ~~Les tirs cadrés sont-ils plus déterminants que les tirs ?~~<br>Les tirs cadrés permettent-ils de mieux expliquer le nombre de buts que le nombre total de tirs ? | talShots (HS + AS), TotalShotsTarget (HST + AST), TotalGoals (FTHG + FTAG) | Scatter comparatif | Comparer le lien entre tirs, tirs cadrés et buts |
+| 9 | ~~Les tirs cadrés sont-ils plus déterminants que les tirs ?~~<br>Les tirs cadrés permettent-ils de mieux expliquer le nombre de buts que le nombre total de tirs ? | TotalShots (HS + AS), TotalShotsTarget (HST + AST), TotalGoals (FTHG + FTAG) | Scatter comparatif | Comparer le lien entre tirs, tirs cadrés et buts |
 | 10 |~~Existe-t-il une relation entre tirs et buts ?~~<br> | ~~TotalShots (HS + AS), TotalGoals (FTHG + FTAG)~~<br> | ~~Scatter~~<br> | ~~Corrélation |
 | 11 | ~~Les équipes dominantes en tirs gagnent-elles réellement ?~~<br>La quantité de tirs garantit-elle la victoire à coup sûr ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
 | 12 | ~~Existe-t-il des matchs dominés mais perdus ?~~<br>Quelle est la fréquence des hold-ups (matchs dominés aux tirs mais perdus) ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
