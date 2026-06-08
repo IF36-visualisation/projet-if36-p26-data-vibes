@@ -4,8 +4,13 @@ author: DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA 
   Tatiana
 date: "2026-04-20"
 output:
-  html_document: default
+  html_document: 
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
   pdf_document: default
+
 ---
 
 ```{r setup, include=FALSE}
@@ -84,23 +89,28 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 
 Le graphique montre que les victoires à domicile sont plus fréquentes que les victoires à l’extérieur. Les matchs nuls occupent une position intermédiaire.
 
-Ce résultat confirme l’existence d’un avantage du terrain en Premier League : jouer à domicile semble augmenter les chances de victoire.
+Ce résultat suggère l’existence d’un avantage du terrain en Premier League : jouer à domicile semble augmenter les chances de victoire.
 
-### Limites
+### Interprétation et limites
 
-Cette analyse montre une tendance générale, mais elle ne permet pas d’expliquer précisément les causes de cet avantage. D’autres facteurs, comme le niveau des équipes ou la saison, pourraient aussi influencer les résultats.
+Cette analyse met en évidence une tendance générale en faveur des équipes à domicile. Elle confirme donc l’hypothèse de départ.
+
+Cependant, elle ne permet pas d’expliquer précisément les causes de cet avantage. D’autres facteurs, comme le niveau des équipes, la saison, la forme du moment ou l’adversaire rencontré, peuvent aussi influencer les résultats.
 
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
 ### Hypothèse
+
 Nous cherchons à comprendre comment se distribue le nombre total de buts marqués par match en Premier League.  
 On peut supposer que la majorité des matchs comportent un nombre modéré de buts, avec peu de rencontres très riches en buts.
 
-### Visualisation
+### Choix de la visualisation
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -130,7 +140,7 @@ ggplot(epl, aes(x = TotalGoals)) +
 
 ```
 
-### Interprétation
+### Analyse des résultats
 
 L'histogramme montre que la majorité des matchs se concentrent entre 1 et 3 buts.
 
@@ -139,6 +149,12 @@ On observe une diminution progressive du nombre de matchs lorsque le nombre tota
 La distribution est asymétrique à droite, avec quelques valeurs élevées mais peu fréquentes.
 
 Ainsi, le graphique confirme notre hypothèse initiale : les matchs de Premier League présentent généralement un nombre modéré de buts.
+
+### Interprétation et limites
+
+Cette analyse permet de décrire la distribution générale du nombre de buts par match. Cependant, elle ne permet pas d’expliquer pourquoi certains matchs sont plus riches en buts que d’autres.
+
+Pour aller plus loin, il serait utile de croiser le nombre de buts avec d’autres variables, comme les équipes, les saisons ou le nombre de tirs.
 
 ## 4. Quelles équipes marquent le plus de buts ?
 
@@ -195,7 +211,7 @@ Le graphique confirme la domination des clubs du "*Big Six*". Manchester United,
 
 On observe un écrat marqué entre ces leaders historiques et le reste des équipes : seules les équipes de ce haut de tableau ont inscrits un nombre de buts suprieur à 1500 buts sur la période. Cette visualisation met en évidence une hiérarchie offensive très stable sur le long terme dans le championnat anglais.
 
-### Critique et limites
+### Interprétation et limites
 Bien que ce graphique offre une vision globale efficace, il comporte certains biais qu'il est nécessaire de souligner :
 
 * **Biais de longévité** : en utilisant le cumul historique des buts, nous favorisons les équipes n'ayant jamais été reléguées; une équipe très offensive présente seulement 2 ou 3 saisons en Premier League paraîtra moins "prolifique" qu'une équipe moyenne présente depuis 30 ans.
@@ -206,82 +222,75 @@ Bien que ce graphique offre une vision globale efficace, il comporte certains bi
 
 ## 5. Les matchs sont-ils souvent décidés en seconde mi-temps ?
 
+### Hypothèse
 
-Il s'agit ici de comprendre la dynamique temporelle. Nous imaginons que La seconde mi-temps est plus décisive que la première, car les équipes s’adaptent tactiquement, la fatigue apparaît et les changements de joueurs influencent le jeu.
+Nous supposons que la seconde mi-temps joue un rôle important dans l’issue des matchs. Après la pause, les équipes peuvent modifier leur stratégie, la fatigue apparaît et les changements de joueurs peuvent influencer le jeu.
 
-On s’attend donc à observer :
+On peut donc s’attendre à observer une proportion importante de matchs dont le résultat évolue entre la mi-temps et la fin du match.
 
-- Davantage de buts en seconde mi-temps 
+### Choix de la visualisation
 
-- De potentiellement des changements de résultat après la mi-temps.
+Pour répondre à cette question, nous comparons le résultat à la mi-temps (`HTR`) avec le résultat final (`FTR`).
 
+Nous créons une variable `Decision` avec deux catégories :
 
+- `Résultat inchangé` : le résultat à la mi-temps est le même que le résultat final ;
+- `Résultat changé en 2e mi-temps` : le résultat final est différent du résultat à la mi-temps.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-# Import des librairies
+Nous utilisons ensuite un diagramme en barres afin de comparer la proportion de matchs dans chaque catégorie. Cette visualisation permet de voir rapidement si les changements de résultat après la mi-temps sont fréquents.
 
-library(ggplot2)
-library(dplyr)
-
-# Lecture du dataset
-
-
-# Nettoyage de données
-
+```{r q5-decision-seconde-mi-temps, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7, fig.height=4.5, fig.align='center', out.width='85%'}
 epl_clean <- epl %>%
-  filter(!is.na(HTR), !is.na(FTR))
-
-# Préparation de données
-
-epl_clean <- epl_clean %>%
+  filter(!is.na(HTR), !is.na(FTR)) %>%
   mutate(
-    Decision = ifelse(HTR == FTR,
-                      "Résultat inchangé",
-                      "Résultat changé en 2e mi-temps")
+    Decision = ifelse(
+      HTR == FTR,
+      "Résultat inchangé",
+      "Résultat changé en 2e mi-temps"
+    ),
+    Decision = factor(
+      Decision,
+      levels = c("Résultat inchangé", "Résultat changé en 2e mi-temps")
+    )
   )
-
-# Visualisation
 
 epl_clean %>%
   count(Decision) %>%
   mutate(prop = n / sum(n)) %>%
-  ggplot(aes(x = Decision, y = prop,fill = Decision)) +
-  geom_bar(stat = "identity") +
+  ggplot(aes(x = Decision, y = prop, fill = Decision)) +
+  geom_col(width = 0.65) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
-    title = "Part des matchs décidés en seconde mi-temps",
-    x = "Type d'évolution du match",
-    y = "Proportion de matchs",
+    title = "Évolution du résultat entre la mi-temps et la fin du match",
+    subtitle = "Comparaison entre résultats inchangés et résultats modifiés en seconde mi-temps",
+    x = "Évolution du résultat",
+    y = "Proportion des matchs",
     fill = "Catégorie"
   ) +
-  scale_y_continuous(labels = scales::percent) +
-  
-  theme_minimal()
-
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    axis.text.x = element_text(angle = 10, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
 ```
 
-## Interprétation
+### Analyse des résultats
 
-Ce graphique présente la répartition des matchs selon l’évolution du résultat entre la mi-temps et la fin du match on observe donc :
+Le graphique montre que la majorité des matchs conservent le même résultat entre la mi-temps et la fin du match. Environ 61 % des matchs ont un résultat inchangé, contre environ 39 % dont le résultat change en seconde mi-temps.
 
-environ ~61 % de  résultat inchangé  et ~39 % de Résultat changé en seconde mi-temps.
+Ces résultats indiquent que les matchs ne sont pas majoritairement décidés en seconde mi-temps. Cependant, la proportion de changements reste importante : près de quatre matchs sur dix connaissent une évolution du résultat après la pause.
 
-Cela nous permet de répondre à la question posée en disant que,les matchs ne sont pas majoritairement décidés en seconde mi-temps, mais ont une proportion significative.
+### Interprétation et limites
 
-L'hypothèse du début n'est donc pas vérifiée
+L’hypothèse de départ n’est donc que partiellement vérifiée. La première mi-temps semble déjà jouer un rôle important dans l’issue du match, car plus de la moitié des matchs gardent le même résultat jusqu’à la fin.
 
-Le fait que plus de la moitié des matchs gardent le même résultat suggère que la première mi-temps joue déjà un rôle déterminant dans l’issue du match.
-Une équipe qui mène à la pause a donc de fortes chances de conserver son avantage.
+Cependant, cette analyse reste limitée. Elle compare seulement le type de résultat (`H`, `D`, `A`) entre la mi-temps et la fin du match. Elle ne prend pas en compte l’évolution du score exact. Par exemple, un match nul 0-0 à la mi-temps et 2-2 à la fin est considéré comme un résultat inchangé, alors que la seconde mi-temps a été très active.
 
-## Limite 
+Cette visualisation permet donc d’étudier les changements d’issue du match, mais elle ne décrit pas toute la dynamique réelle de la seconde mi-temps.
 
-Même si le résultat ne change pas (HTR = FTR), cela ne signifie pas que :la seconde mi-temps n’a pas été importante
-
-Par exemple : si on a un score de 0-0 à la mi-temps et 2-2 à la fin,on voit que le résultat ne change pas (toujours un match nul), mais match très actif en seconde période.
-
-Donc cette analyse capture les changements d’issue, mais pas la dynamique réelle du match.
-
-
-## Question 6 — Quelle proportion de matchs connaît un retournement ?
+## 6. Quelle proportion de matchs connaît un retournement ?
 
 ### Hypothèse
 
@@ -341,7 +350,7 @@ Le diagramme montre que les retournements complets représentent une faible part
 
 Ce résultat confirme l’hypothèse : le fait de mener à la mi-temps constitue généralement un avantage important pour l’issue du match.
 
-### Critique et limites
+### Interprétation et limites
 
 Cette analyse repose uniquement sur le résultat à la mi-temps et le résultat final. Elle ne prend pas en compte le moment exact des buts, les cartons rouges, les blessures ou les changements tactiques.
 
@@ -410,19 +419,39 @@ La heatmap montre que le résultat à la mi-temps est fortement lié au résulta
 
 En revanche, les matchs nuls à la mi-temps donnent des résultats plus variés. Le résultat à la pause constitue donc un bon indicateur de l’issue du match, sans permettre une prédiction parfaite.
 
-### Limites
+### Interprétation et limites
 
 Cette analyse met en évidence une tendance générale, mais elle ne prend pas en compte d’autres facteurs, comme les buts en seconde période, les cartons rouges, les blessures ou les changements tactiques.
 
-## 8. Les équipes qui tirent le plus gagnent-elles ?
+## 8. La différence de tirs entre les deux équipes est-elle associée au résultat final ?
 
 ### Hypothèse
 
-Nous supposons qu’une équipe qui tire davantage que son adversaire a plus de chances de gagner le match.
+Nous supposons que la différence de tirs entre les deux équipes est liée au résultat final du match. Plus une équipe tire davantage que son adversaire, plus elle devrait avoir de chances de gagner. Cependant, cette relation n’est pas forcément automatique, car le nombre de tirs ne prend pas en compte la qualité des occasions.
 
 ### Choix de la visualisation
 
-Nous utilisons un diagramme en barres empilées à 100 % afin de comparer la répartition des résultats finaux selon la différence de tirs entre les deux équipes. Cette visualisation permet d’observer si l’équipe qui tire le plus gagne plus souvent.
+Pour répondre à cette question, nous utilisons un diagramme en barres empilées à 100 %. Ce type de visualisation permet de comparer la répartition des résultats finaux selon plusieurs niveaux de différence de tirs.
+
+Nous calculons d’abord la variable `ShotDiff` :
+
+```{r, eval=FALSE}
+ShotDiff = HS - AS
+```
+
+Lorsque `ShotDiff` est positif, cela signifie que l’équipe à domicile a tiré plus que l’équipe à l’extérieur. Lorsque `ShotDiff` est négatif, cela signifie que l’équipe à l’extérieur a tiré plus que l’équipe à domicile. Lorsque `ShotDiff` est égal à 0, les deux équipes ont tiré autant.
+
+Nous regroupons ensuite les matchs en cinq catégories :
+
+```text
+Avantage extérieur fort
+Avantage extérieur léger
+Égalité
+Avantage domicile léger
+Avantage domicile fort
+```
+
+Cette représentation permet d’observer si la proportion de victoires évolue lorsque l’écart de tirs devient plus favorable à une équipe.
 
 ```{r q8-shotdiff-group, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
 shots_group <- epl %>%
@@ -430,20 +459,20 @@ shots_group <- epl %>%
   mutate(
     ShotDiff = HS - AS,
     Groupe_tirs = case_when(
-      ShotDiff <= -5 ~ "Extérieur +",
-      ShotDiff < 0 ~ "Extérieur léger +",
+      ShotDiff <= -5 ~ "Avantage extérieur fort",
+      ShotDiff < 0 ~ "Avantage extérieur léger",
       ShotDiff == 0 ~ "Égalité",
-      ShotDiff <= 5 ~ "Domicile léger +",
-      TRUE ~ "Domicile +"
+      ShotDiff <= 5 ~ "Avantage domicile léger",
+      TRUE ~ "Avantage domicile fort"
     ),
     Groupe_tirs = factor(
       Groupe_tirs,
       levels = c(
-        "Extérieur +",
-        "Extérieur léger +",
+        "Avantage extérieur fort",
+        "Avantage extérieur léger",
         "Égalité",
-        "Domicile léger +",
-        "Domicile +"
+        "Avantage domicile léger",
+        "Avantage domicile fort"
       )
     ),
     Resultat = recode(
@@ -459,8 +488,8 @@ ggplot(shots_group, aes(x = Groupe_tirs, fill = Resultat)) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   labs(
     title = "Résultat final selon la différence de tirs",
-    subtitle = "Comparaison des résultats selon l’équipe qui tire le plus",
-    x = "Différence de tirs",
+    subtitle = "Répartition des résultats selon l’avantage en nombre de tirs",
+    x = "Différence de tirs entre les deux équipes",
     y = "Proportion des matchs",
     fill = "Résultat final"
   ) +
@@ -475,27 +504,33 @@ ggplot(shots_group, aes(x = Groupe_tirs, fill = Resultat)) +
 
 ### Analyse des résultats
 
-Le graphique montre que lorsque l’équipe à domicile tire davantage, la proportion de victoires à domicile augmente nettement. À l’inverse, lorsque l’équipe à l’extérieur tire davantage, les victoires à l’extérieur deviennent plus fréquentes.
+Le graphique montre une tendance progressive : plus l’avantage en tirs est favorable à l’équipe à domicile, plus la proportion de victoires à domicile augmente. À l’inverse, lorsque l’avantage en tirs est favorable à l’équipe à l’extérieur, les victoires à l’extérieur sont plus fréquentes.
 
-Lorsque le nombre de tirs est proche ou égal, les résultats sont plus équilibrés. Ces observations suggèrent donc qu’il existe un lien entre le nombre de tirs et la victoire : l’équipe qui tire le plus a généralement plus de chances de gagner.
+Dans la catégorie « Égalité », les résultats sont plus équilibrés : aucune issue ne domine totalement. Cela suggère que la différence de tirs est bien associée au résultat final, mais qu’elle ne suffit pas à expliquer tous les matchs.
 
-### Limites
+### Interprétation et limites
 
-Cette analyse repose sur le nombre total de tirs, mais elle ne prend pas en compte leur qualité. Un tir lointain et un tir très dangereux sont comptés de la même manière. Pour compléter l’analyse, il serait utile d’étudier les tirs cadrés ou d’autres indicateurs d’efficacité offensive.
+La domination en nombre de tirs semble donc être un indicateur important du résultat final. Cependant, cette relation n’est pas automatique : même avec un fort avantage en tirs, une équipe peut ne pas gagner.
+
+Cette analyse ne prend pas en compte la qualité des tirs. Un tir cadré, une occasion dangereuse ou un tir lointain sont ici traités de manière trop simple. C’est pourquoi il est nécessaire de compléter cette analyse avec les tirs cadrés et l’efficacité offensive.
 
 
-## 9. Les tirs cadrés sont-ils plus déterminants que les tirs ?
+## 9. Les tirs cadrés permettent-ils de mieux expliquer le nombre de buts que le nombre total de tirs ?
 
 ### Hypothèse
 
-Dans la question précédente, nous avons observé que l’équipe qui tire davantage a généralement plus de chances de gagner. Nous supposons ici que les tirs cadrés sont encore plus déterminants que les tirs totaux, car ils traduisent des occasions plus dangereuses.
+Nous supposons que les tirs cadrés sont plus liés au nombre de buts que le nombre total de tirs. En effet, un tir cadré représente une occasion plus dangereuse qu’un simple tir, car il oblige le gardien ou la défense à intervenir directement.
 
 ### Choix de la visualisation
 
-Nous utilisons le même type de graphique que dans la question précédente afin de faciliter la comparaison. Le diagramme en barres empilées à 100 % permet d’observer la répartition des résultats finaux selon la différence de tirs cadrés entre les deux équipes.
+Pour répondre à cette question, nous utilisons un nuage de points comparatif. Cette visualisation permet d’observer la relation entre deux variables numériques : le nombre de tirs et le nombre de buts.
 
-```{r q9-data, echo=FALSE, message=FALSE, warning=FALSE}
-efficacite_tirs <- epl %>%
+Nous comparons deux relations : d’une part, le nombre total de tirs et le nombre total de buts ; d’autre part, le nombre total de tirs cadrés et le nombre total de buts.
+
+Chaque point représente un match. Une droite de tendance est ajoutée pour visualiser la relation générale. Cela permet de voir si les tirs cadrés semblent mieux associés aux buts que les tirs totaux.
+
+```{r q9-tirs-cadres-buts, echo=FALSE, message=FALSE, warning=FALSE, fig.width=9, fig.height=5, fig.align='center', out.width='95%'}
+epl_q9 <- epl %>%
   filter(
     !is.na(HS), !is.na(AS),
     !is.na(HST), !is.na(AST),
@@ -506,131 +541,60 @@ efficacite_tirs <- epl %>%
     TotalShotsTarget = HST + AST,
     TotalGoals = FTHG + FTAG
   )
-```
 
-```{r q9-shot-target-diff, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
-shots_target_group <- epl %>%
-  filter(!is.na(HST), !is.na(AST), !is.na(FTR)) %>%
+epl_q9_long <- epl_q9 %>%
+  select(TotalShots, TotalShotsTarget, TotalGoals) %>%
+  tidyr::pivot_longer(
+    cols = c(TotalShots, TotalShotsTarget),
+    names_to = "Type_tirs",
+    values_to = "Nombre_tirs"
+  ) %>%
   mutate(
-    ShotTargetDiff = HST - AST,
-    Groupe_cadres = case_when(
-      ShotTargetDiff <= -3 ~ "Extérieur +",
-      ShotTargetDiff < 0 ~ "Extérieur léger +",
-      ShotTargetDiff == 0 ~ "Égalité",
-      ShotTargetDiff <= 3 ~ "Domicile léger +",
-      TRUE ~ "Domicile +"
-    ),
-    Groupe_cadres = factor(
-      Groupe_cadres,
-      levels = c(
-        "Extérieur +",
-        "Extérieur léger +",
-        "Égalité",
-        "Domicile léger +",
-        "Domicile +"
-      )
-    ),
-    Resultat = recode(
-      FTR,
-      "H" = "Victoire domicile",
-      "D" = "Match nul",
-      "A" = "Victoire extérieur"
+    Type_tirs = recode(
+      Type_tirs,
+      "TotalShots" = "Tirs totaux",
+      "TotalShotsTarget" = "Tirs cadrés"
     )
   )
 
-ggplot(shots_target_group, aes(x = Groupe_cadres, fill = Resultat)) +
-  geom_bar(position = "fill", width = 0.75) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  labs(
-    title = "Résultat final selon la différence de tirs cadrés",
-    subtitle = "Comparaison des résultats selon l’équipe qui cadre le plus",
-    x = "Différence de tirs cadrés",
-    y = "Proportion des matchs",
-    fill = "Résultat final"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    plot.title = element_text(face = "bold", size = 14),
-    plot.subtitle = element_text(size = 11, color = "grey40"),
-    axis.text.x = element_text(angle = 20, hjust = 1),
-    panel.grid.minor = element_blank()
-  )
-```
-
-### Analyse des résultats
-
-Le graphique prolonge l’analyse de la question précédente. On observe que l’équipe qui cadre davantage a généralement plus de chances de gagner le match.
-
-La relation semble plus nette que pour les tirs totaux : lorsque l’écart de tirs cadrés augmente en faveur d’une équipe, sa probabilité de victoire augmente aussi. Cela suggère que les tirs cadrés sont plus déterminants que le simple volume de tirs.
-
-### Limites
-
-Cette analyse ne prend pas en compte la qualité exacte des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière.
-
-## 10. Existe-t-il une relation entre tirs et buts ?
-
-### Hypothèse
-
-Nous supposons qu’il existe une relation positive entre le nombre total de tirs effectués dans un match et le nombre total de buts marqués. En effet, plus les deux équipes tentent de tirs, plus elles augmentent théoriquement leurs chances de marquer. Cependant, cette relation peut rester limitée, car tous les tirs n’ont pas la même qualité ni la même probabilité de se transformer en but.
-
-### Choix de la visualisation
-
-Nous utilisons un nuage de points afin d’étudier la relation entre deux variables numériques : le nombre total de tirs et le nombre total de buts par match.
-
-Chaque point représente un match. L’axe horizontal indique le nombre total de tirs réalisés par les deux équipes, tandis que l’axe vertical indique le nombre total de buts inscrits dans le match. Une droite de tendance est ajoutée afin de visualiser plus clairement la relation générale entre ces deux variables.
-
-Cette visualisation est adaptée car elle permet d’observer à la fois la tendance globale, la dispersion des matchs et les éventuels cas atypiques.
-
-```{r q10-tirs-buts, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
-epl_q10 <- epl %>%
-  filter(
-    !is.na(HS), !is.na(AS),
-    !is.na(FTHG), !is.na(FTAG)
-  ) %>%
-  mutate(
-    # Nombre total de tirs effectués par les deux équipes pendant le match.
-    TotalShots = HS + AS,
-
-    # Nombre total de buts marqués par les deux équipes pendant le match.
-    TotalGoals = FTHG + FTAG
-  )
-
-ggplot(epl_q10, aes(x = TotalShots, y = TotalGoals)) +
-  geom_point(alpha = 0.25, size = 1.8) +
+ggplot(epl_q9_long, aes(x = Nombre_tirs, y = TotalGoals)) +
+  geom_point(alpha = 0.25, size = 1.6) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
-  scale_x_continuous(
-    breaks = seq(0, 60, 5),
-    limits = c(0, 60)
-  ) +
+  facet_wrap(~ Type_tirs, scales = "free_x") +
   scale_y_continuous(
     breaks = seq(0, 10, 1),
     limits = c(0, 10)
   ) +
   labs(
-    title = "Relation entre le nombre total de tirs et le nombre total de buts",
-    subtitle = "Chaque point représente un match de Premier League",
-    x = "Nombre total de tirs dans le match",
+    title = "Lien entre tirs, tirs cadrés et buts",
+    subtitle = "Comparaison entre le volume de tirs et la précision offensive",
+    x = "Nombre de tirs dans le match",
     y = "Nombre total de buts dans le match"
   ) +
   theme_minimal(base_size = 12) +
   theme(
     plot.title = element_text(face = "bold", size = 14),
     plot.subtitle = element_text(size = 11, color = "grey40"),
+    strip.text = element_text(face = "bold"),
     panel.grid.minor = element_blank()
   )
 ```
 
 ### Analyse des résultats
 
-Le graphique met en évidence une relation positive entre le nombre total de tirs et le nombre total de buts. Globalement, les matchs avec davantage de tirs ont tendance à produire plus de buts.
+Les deux graphiques montrent une relation positive entre les tirs et les buts : plus le nombre de tirs augmente, plus le nombre de buts a tendance à augmenter.
 
-Cependant, la dispersion des points reste importante. Certains matchs présentent beaucoup de tirs mais peu de buts, tandis que d'autres produisent plusieurs buts avec un nombre de tirs plus limité. Le nombre de tirs semble donc influencer le nombre de buts sans pour autant l'expliquer entièrement.
+Cependant, cette relation est plus nette pour les tirs cadrés. La droite de tendance est plus inclinée dans le graphique des tirs cadrés, ce qui montre que les buts augmentent plus clairement lorsque le nombre de tirs cadrés augmente.
 
-### Critiques et limites
+Les tirs totaux donnent donc une information sur le volume offensif, mais les tirs cadrés semblent mieux liés au nombre de buts. Cela suggère que la précision des tirs est plus importante que la simple quantité de tirs.
 
-Cette analyse ne prend en compte que le nombre total de tirs. Or, tous les tirs n'ont pas la même probabilité de se transformer en but.
+### Interprétation et limites
 
-De plus, les tirs des deux équipes sont regroupés dans une même variable. Il serait intéressant d'étudier séparément chaque équipe ou d'utiliser les tirs cadrés pour obtenir une mesure plus précise de l'efficacité offensive.
+Cette analyse montre que les tirs cadrés sont un meilleur indicateur de l’efficacité offensive que les tirs totaux. Une équipe peut beaucoup tirer sans marquer si ses tirs ne sont pas cadrés.
+
+Cependant, cette visualisation ne mesure pas précisément la qualité des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière. De plus, les tirs des deux équipes sont regroupés au niveau du match, ce qui ne permet pas d’analyser séparément la performance de chaque équipe.
+
+Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe ou d’utiliser des indicateurs plus précis comme la position du tir ou les expected goals.
 
 ## 16. Existe-t-il une relation entre fautes et cartons ?
 
@@ -712,7 +676,7 @@ Le graphique montre une relation positive entre le nombre de fautes commises et 
 
 Toutefois, la dispersion des points montre que cette relation n'est pas parfaite. Pour un même nombre de fautes, certaines équipes reçoivent plus de cartons que d'autres, ce qui suggère que d'autres facteurs interviennent également.
 
-### Critiques et limites
+### Interprétation et limites
 
 Cette analyse repose uniquement sur les cartons jaunes et ne prend pas en compte les cartons rouges.
 
@@ -784,13 +748,13 @@ Le graphique montre que le nombre moyen de cartons distribués varie selon les a
 
 Les écarts observés restent cependant relativement modérés. Cela suggère que les arbitres n'ont pas exactement les mêmes habitudes de sanction, même si leurs comportements restent globalement comparables.
 
-### Critiques et limites
+### Interprétation et limites
 
 Cette analyse repose sur une moyenne de cartons par match, ce qui ne permet pas de prendre en compte la variabilité entre les rencontres.
 
 De plus, le nombre de cartons peut dépendre du style de jeu des équipes ou du contexte du match, et pas uniquement de l'arbitre lui-même.
   
-## Question 20 — Le nombre de buts évolue-t-il selon les saisons ?
+## 20.Le nombre de buts évolue-t-il selon les saisons ?
 
 ### Hypothèse
 
@@ -798,7 +762,7 @@ Nous cherchons à savoir si le nombre moyen de buts marqués par match évolue a
 
 On peut supposer que certaines saisons sont plus offensives que d’autres, ce qui pourrait se traduire par des variations du nombre moyen de buts.
 
-### Visualisation
+### Choix de la visualisation
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -832,14 +796,20 @@ ggplot(season_goals, aes(x = Season, y = MeanGoals, group = 1)) +
   )
 ```
 
-### Interprétation
+### Analyse des résultats
 
 Le graphique montre l’évolution du nombre moyen de buts par match au fil des saisons de Premier League.
 
-On observe que cette moyenne reste relativement stable, généralement comprise entre 2.5 et 2.8 buts par match. Cela signifie que les rencontres comportent en moyenne entre 2 et 3 buts, ce qui traduit un bon équilibre entre phases offensives et défensives dans le championnat.
+On observe que cette moyenne reste globalement assez stable, généralement autour de 2,5 à 2,8 buts par match. Cela signifie que la plupart des saisons présentent en moyenne entre deux et trois buts par rencontre.
 
-Cependant, on remarque certaines fluctuations selon les saisons. Par exemple, une baisse notable autour des saisons 2005–2008 suggère une période plus défensive, tandis qu’une augmentation après 2010 indique un jeu plus offensif, avec davantage d’occasions et de buts marqués.
+Cependant, certaines fluctuations apparaissent selon les saisons. On remarque par exemple une baisse autour des saisons 2005-2008, puis une remontée progressive après 2010. Ces variations montrent que le nombre moyen de buts n’est pas parfaitement constant d’une saison à l’autre.
 
-Depuis les années récentes, la moyenne tend légèrement à augmenter, ce qui peut s’expliquer par l’évolution du football moderne : intensité plus élevée, stratégies offensives plus développées et amélioration des performances des joueurs.
+Dans les saisons les plus récentes, la moyenne semble légèrement plus élevée qu’au milieu des années 2000. Cela suggère une tendance modérée à l’augmentation du nombre de buts, même si cette évolution reste limitée.
 
-Ainsi, même si le nombre de buts reste globalement stable, on observe une légère tendance à l’augmentation, traduisant un championnat de plus en plus spectaculaire.
+### Interprétation et limites
+
+Ces résultats indiquent que le nombre de buts par match en Premier League reste relativement stable sur l’ensemble de la période étudiée, avec quelques variations selon les saisons.
+
+Il faut cependant rester prudent dans l’interprétation. Le graphique permet d’observer une évolution du nombre de buts, mais il ne permet pas d’expliquer directement les causes de ces variations. Celles-ci peuvent être liées à de nombreux facteurs, comme les styles de jeu, le niveau des équipes, les changements tactiques ou encore l’évolution du championnat.
+
+Ainsi, on peut parler d’une légère tendance à la hausse dans les saisons récentes, mais il serait nécessaire d’analyser d’autres variables pour confirmer l’idée d’un championnat plus offensif ou plus spectaculaire.
