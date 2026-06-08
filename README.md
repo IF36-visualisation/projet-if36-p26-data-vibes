@@ -174,8 +174,14 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
 | 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
-| 21 | Quelles variables sont les plus corrélées entre elles ? | Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards) | Heatmap | Vision globale des relations |
-    
+| 21 | ~~Quelles variables sont les plus corrélées entre elles ?~~ | ~~Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards)~~ | ~~Heatmap~~ | ~~Vision globale des relations~~ |
+| 21 | Les équipes les plus offensives sont-elles aussi les plus efficaces ? | HomeTeam, AwayTeam, TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter plot | Comparer volume offensif et efficacité offensive |
+
+
+**Modification du plan d'analyse :**
+Une heatmap de corrélation globale permet d'identifier des relations statistiques entre variables, mais elle ne répond pas directement à une problématique métier ou footballistique clairement définie. Les résultats obtenus auraient été difficiles à interpréter dans le cadre de notre analyse exploratoire.
+
+
 ---
 
 ## Méthodologie de traitement et exploration interactive
