@@ -154,7 +154,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 | 10 |~~Existe-t-il une relation entre tirs et buts ?~~<br> | ~~TotalShots (HS + AS), TotalGoals (FTHG + FTAG)~~<br> | ~~Scatter~~<br> | ~~Corrélation |
 | 11 | ~~Les équipes dominantes en tirs gagnent-elles réellement ?~~<br>La quantité de tirs garantit-elle la victoire à coup sûr ? | ShotDiff (HS − AS), FTR | Boxplot | Domination vs victoire |
 | 12 | ~~Existe-t-il des matchs dominés mais perdus ?~~<br>Quelle est la fréquence des hold-ups (matchs dominés aux tirs mais perdus) ? | ShotDiff (HS − AS), FTR | Scatter | Cas contre-intuitifs |
-| 13 | ~~Les matchs équilibrés en tirs finissent-ils plus souvent en nul ?~~<br>Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ? | TotalGoals (FTHG + FTAG), GoalDiff \|FTHG - FTAG\| | Scatter plot | Comparer intensité offensive et équilibre du score |
+| 13 | ~~Les matchs équilibrés en tirs finissent-ils plus souvent en nul ?~~<br>Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ? | TotalGoals (FTHG + FTAG), GoalDiff = |FTHG - FTAG| | Scatter plot | Comparer intensité offensive et équilibre du score |
 | 14 | Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ? | HomeTeam, HS, FTHG | Bar chart (Faceting) | Comparer les profils d'efficacité par équipe |
 
 
@@ -164,7 +164,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 |--:|----------|----------|--------------|---------|
 | 15 | ~~Les fautes influencent-elles le résultat du match ?~~<br>L'agressivité sur le terrain (fautes) pénalise-t-elle le résultat final ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
 | 16 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
-| 17 | ~~Les cartons rouges ont-ils un impact sur le résultat ?~~<br>Les arbitres les plus sévères arbitrent-ils aussi les matchs les plus tendus ? | Referee, TotalFouls (HF + AF), TotalCards (HY + AY + HR + AR) | Scatter plot | Distinguer sévérité arbitrale et intensité des matchs |
+| 17 | ~~Les cartons rouges ont-ils un impact sur le résultat ?~~<br>Existe-t-il une relation entre le nombre de fautes et le nombre de cartons selon les arbitres ? | Referee, TotalFouls (HF + AF), TotalCards (HY + AY + HR + AR) | Scatter plot | Analyser les différences de sanction selon les arbitres |
 | 18 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
 | 19 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards (HY + AY + HR + AR) | Bar chart | Influence du contexte |
 
