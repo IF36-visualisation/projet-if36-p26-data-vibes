@@ -622,19 +622,15 @@ ggplot(epl_q10, aes(x = TotalShots, y = TotalGoals)) +
 
 ### Analyse des résultats
 
-Le graphique montre une relation globalement positive entre le nombre total de tirs et le nombre total de buts. La droite de tendance est légèrement orientée vers le haut, ce qui signifie que les matchs avec davantage de tirs ont tendance à produire un peu plus de buts.
+Le graphique met en évidence une relation positive entre le nombre total de tirs et le nombre total de buts. Globalement, les matchs avec davantage de tirs ont tendance à produire plus de buts.
 
-Cependant, la dispersion des points reste importante. On observe par exemple des matchs avec un nombre élevé de tirs mais relativement peu de buts, ainsi que des matchs avec moins de tirs mais plusieurs buts inscrits. Cela montre que le volume de tirs n’explique pas à lui seul le nombre de buts marqués.
-
-Ces résultats confirment donc partiellement notre hypothèse. Il existe bien un lien entre tirs et buts, mais ce lien semble modéré. Le nombre de tirs augmente les possibilités de marquer, mais l’efficacité offensive, la qualité des occasions et la performance des gardiens jouent également un rôle important.
+Cependant, la dispersion des points reste importante. Certains matchs présentent beaucoup de tirs mais peu de buts, tandis que d'autres produisent plusieurs buts avec un nombre de tirs plus limité. Le nombre de tirs semble donc influencer le nombre de buts sans pour autant l'expliquer entièrement.
 
 ### Critiques et limites
 
-Cette analyse repose uniquement sur le nombre total de tirs, sans distinguer leur qualité. Un tir lointain, peu dangereux, est comptabilisé de la même manière qu’une occasion nette dans la surface de réparation.
+Cette analyse ne prend en compte que le nombre total de tirs. Or, tous les tirs n'ont pas la même probabilité de se transformer en but.
 
-De plus, le graphique additionne les tirs des deux équipes. Il permet donc d’analyser le rythme offensif global d’un match, mais il ne montre pas quelle équipe a été la plus efficace individuellement.
-
-Enfin, l’absence d’indicateurs comme les tirs cadrés détaillés, la position des tirs ou les expected goals limite l’interprétation. Ces variables permettraient de mieux comprendre pourquoi certains matchs avec beaucoup de tirs produisent peu de buts, tandis que d’autres sont plus efficaces offensivement.
+De plus, les tirs des deux équipes sont regroupés dans une même variable. Il serait intéressant d'étudier séparément chaque équipe ou d'utiliser les tirs cadrés pour obtenir une mesure plus précise de l'efficacité offensive.
 
 ## 16. Existe-t-il une relation entre fautes et cartons ?
 
@@ -712,19 +708,15 @@ ggplot(epl_q16, aes(x = Fautes, y = Cartons)) +
 
 ### Analyse des résultats
 
-Le graphique montre une relation globalement positive entre le nombre de fautes commises et le nombre de cartons jaunes reçus. La droite de tendance est orientée vers le haut, ce qui indique que les équipes qui commettent davantage de fautes ont généralement tendance à recevoir plus de cartons.
+Le graphique montre une relation positive entre le nombre de fautes commises et le nombre de cartons reçus. Les équipes qui commettent davantage de fautes ont généralement tendance à recevoir plus de cartons.
 
-Cependant, la dispersion des points reste importante. Pour un même nombre de fautes, certaines équipes reçoivent peu de cartons, tandis que d’autres sont davantage sanctionnées. Cela montre que le nombre de fautes ne suffit pas à expliquer entièrement le nombre de cartons reçus.
-
-Ces résultats confirment donc partiellement notre hypothèse. Les fautes augmentent bien le risque de sanction, mais la relation n’est pas mécanique. Les cartons dépendent aussi de la gravité des fautes, du contexte du match et de l’interprétation de l’arbitre.
+Toutefois, la dispersion des points montre que cette relation n'est pas parfaite. Pour un même nombre de fautes, certaines équipes reçoivent plus de cartons que d'autres, ce qui suggère que d'autres facteurs interviennent également.
 
 ### Critiques et limites
 
-Cette analyse prend uniquement en compte les cartons jaunes, conformément aux variables prévues dans le plan d’analyse. Elle ne tient donc pas compte des cartons rouges, qui représentent pourtant des sanctions disciplinaires plus graves.
+Cette analyse repose uniquement sur les cartons jaunes et ne prend pas en compte les cartons rouges.
 
-De plus, toutes les fautes sont comptabilisées de la même manière. Une faute légère au milieu du terrain et une faute dangereuse proche de la surface n’ont pourtant pas la même probabilité d’entraîner un carton.
-
-Enfin, la décision de distribuer un carton dépend aussi du contexte du match : intensité de la rencontre, répétition des fautes, moment du match ou style de l’arbitre. Ces éléments ne sont pas directement observables dans le dataset, ce qui limite l’interprétation de la relation entre fautes et cartons.
+Par ailleurs, toutes les fautes sont comptabilisées de la même manière alors que certaines sont plus sévères que d'autres. Le contexte du match ou les décisions arbitrales peuvent également influencer le nombre de cartons distribués.
 
 ## 19. Les arbitres distribuent-ils différemment les cartons ?
 
@@ -788,19 +780,15 @@ ggplot(epl_q19, aes(x = Referee, y = Cartons_moyens)) +
 
 ### Analyse des résultats
 
-Le graphique montre que le nombre moyen de cartons distribués varie selon les arbitres. Certains arbitres présentent une moyenne de cartons par match plus élevée, tandis que d’autres se situent à un niveau plus faible.
+Le graphique montre que le nombre moyen de cartons distribués varie selon les arbitres. Certains arbitres distribuent en moyenne davantage de cartons que d'autres.
 
-Ces différences suggèrent que tous les arbitres ne sanctionnent pas les rencontres de la même manière. Un arbitre avec une moyenne plus élevée peut être associé à des matchs plus sanctionnés, tandis qu’un arbitre avec une moyenne plus basse peut sembler moins strict ou diriger des rencontres moins tendues.
-
-Cependant, les écarts doivent être interprétés avec prudence. Le nombre moyen de cartons ne dépend pas uniquement de l’arbitre : il peut aussi être influencé par le style des équipes, l’intensité du match, l’enjeu de la rencontre ou encore la période étudiée.
+Les écarts observés restent cependant relativement modérés. Cela suggère que les arbitres n'ont pas exactement les mêmes habitudes de sanction, même si leurs comportements restent globalement comparables.
 
 ### Critiques et limites
 
-Cette analyse compare les arbitres à partir du nombre moyen de cartons distribués par match. Or, une moyenne peut masquer une forte variabilité entre les rencontres. Deux arbitres peuvent avoir une moyenne similaire tout en ayant des profils différents : l’un peut distribuer régulièrement un nombre moyen de cartons, tandis qu’un autre peut alterner entre des matchs très calmes et des matchs très sanctionnés.
+Cette analyse repose sur une moyenne de cartons par match, ce qui ne permet pas de prendre en compte la variabilité entre les rencontres.
 
-De plus, les cartons jaunes et rouges sont additionnés dans une même variable, alors qu’ils ne représentent pas le même niveau de sanction. Un carton rouge a un impact beaucoup plus fort sur le déroulement du match qu’un carton jaune.
-
-Enfin, cette analyse ne permet pas d’affirmer qu’un arbitre est directement responsable d’un nombre plus élevé de cartons. Les données ne prennent pas en compte le contexte précis des matchs, comme les rivalités, l’importance du match, le style de jeu des équipes ou la gravité des fautes commises.
+De plus, le nombre de cartons peut dépendre du style de jeu des équipes ou du contexte du match, et pas uniquement de l'arbitre lui-même.
   
 ## Question 20 — Le nombre de buts évolue-t-il selon les saisons ?
 
