@@ -164,7 +164,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 |--:|----------|----------|--------------|---------|
 | 15 | ~~Les fautes influencent-elles le résultat du match ?~~<br>L'agressivité sur le terrain (fautes) pénalise-t-elle le résultat final ? | HF, AF, FTR | Boxplot | Agressivité vs performance |
 | 16 | Existe-t-il une relation entre fautes et cartons ? | HF, HY | Scatter | Cohérence disciplinaire |
-| 17 | ~~Les cartons rouges ont-ils un impact sur le résultat ?~~<br>Existe-t-il une relation entre le nombre de fautes et le nombre de cartons selon les arbitres ? | Referee, TotalFouls (HF + AF), TotalCards (HY + AY + HR + AR) | Scatter plot | Analyser les différences de sanction selon les arbitres |
+| 17 | ~~Les cartons rouges ont-ils un impact sur le résultat ?~~<br>Les arbitres sanctionnent-ils de la même manière un nombre donné de fautes ? | Referee, TotalFouls (HF + AF), TotalCards (HY + AY + HR + AR) | Scatter plot | Analyser les différences de sanction selon les arbitres |
 | 18 | Certaines équipes sont-elles plus sanctionnées que d’autres ? | HomeTeam, AwayTeam, Cards (HY + AY + HR + AR) | Bar chart | Comparaison des styles |
 | 19 | Les arbitres distribuent-ils différemment les cartons ? | Referee, Cards (HY + AY + HR + AR) | Bar chart | Influence du contexte |
 
