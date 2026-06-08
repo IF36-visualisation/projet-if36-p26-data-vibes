@@ -567,13 +567,241 @@ La relation semble plus nette que pour les tirs totaux : lorsque l’écart de t
 
 Cette analyse ne prend pas en compte la qualité exacte des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière.
 
----
-.
-.
-.
-.
----
+## 10. Existe-t-il une relation entre tirs et buts ?
 
+### Hypothèse
+
+Nous supposons qu’il existe une relation positive entre le nombre total de tirs effectués dans un match et le nombre total de buts marqués. En effet, plus les deux équipes tentent de tirs, plus elles augmentent théoriquement leurs chances de marquer. Cependant, cette relation peut rester limitée, car tous les tirs n’ont pas la même qualité ni la même probabilité de se transformer en but.
+
+### Choix de la visualisation
+
+Nous utilisons un nuage de points afin d’étudier la relation entre deux variables numériques : le nombre total de tirs et le nombre total de buts par match.
+
+Chaque point représente un match. L’axe horizontal indique le nombre total de tirs réalisés par les deux équipes, tandis que l’axe vertical indique le nombre total de buts inscrits dans le match. Une droite de tendance est ajoutée afin de visualiser plus clairement la relation générale entre ces deux variables.
+
+Cette visualisation est adaptée car elle permet d’observer à la fois la tendance globale, la dispersion des matchs et les éventuels cas atypiques.
+
+```{r q10-tirs-buts, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+epl_q10 <- epl %>%
+  filter(
+    !is.na(HS), !is.na(AS),
+    !is.na(FTHG), !is.na(FTAG)
+  ) %>%
+  mutate(
+    # Nombre total de tirs effectués par les deux équipes pendant le match.
+    TotalShots = HS + AS,
+
+    # Nombre total de buts marqués par les deux équipes pendant le match.
+    TotalGoals = FTHG + FTAG
+  )
+
+ggplot(epl_q10, aes(x = TotalShots, y = TotalGoals)) +
+  geom_point(alpha = 0.25, size = 1.8) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
+  scale_x_continuous(
+    breaks = seq(0, 60, 5),
+    limits = c(0, 60)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 10, 1),
+    limits = c(0, 10)
+  ) +
+  labs(
+    title = "Relation entre le nombre total de tirs et le nombre total de buts",
+    subtitle = "Chaque point représente un match de Premier League",
+    x = "Nombre total de tirs dans le match",
+    y = "Nombre total de buts dans le match"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Analyse des résultats
+
+Le graphique montre une relation globalement positive entre le nombre total de tirs et le nombre total de buts. La droite de tendance est légèrement orientée vers le haut, ce qui signifie que les matchs avec davantage de tirs ont tendance à produire un peu plus de buts.
+
+Cependant, la dispersion des points reste importante. On observe par exemple des matchs avec un nombre élevé de tirs mais relativement peu de buts, ainsi que des matchs avec moins de tirs mais plusieurs buts inscrits. Cela montre que le volume de tirs n’explique pas à lui seul le nombre de buts marqués.
+
+Ces résultats confirment donc partiellement notre hypothèse. Il existe bien un lien entre tirs et buts, mais ce lien semble modéré. Le nombre de tirs augmente les possibilités de marquer, mais l’efficacité offensive, la qualité des occasions et la performance des gardiens jouent également un rôle important.
+
+### Critiques et limites
+
+Cette analyse repose uniquement sur le nombre total de tirs, sans distinguer leur qualité. Un tir lointain, peu dangereux, est comptabilisé de la même manière qu’une occasion nette dans la surface de réparation.
+
+De plus, le graphique additionne les tirs des deux équipes. Il permet donc d’analyser le rythme offensif global d’un match, mais il ne montre pas quelle équipe a été la plus efficace individuellement.
+
+Enfin, l’absence d’indicateurs comme les tirs cadrés détaillés, la position des tirs ou les expected goals limite l’interprétation. Ces variables permettraient de mieux comprendre pourquoi certains matchs avec beaucoup de tirs produisent peu de buts, tandis que d’autres sont plus efficaces offensivement.
+
+## 16. Existe-t-il une relation entre fautes et cartons ?
+
+### Hypothèse
+
+Nous supposons qu’il existe une relation positive entre le nombre de fautes commises par une équipe et le nombre de cartons qu’elle reçoit. Une équipe qui commet beaucoup de fautes devrait logiquement être plus exposée aux sanctions disciplinaires, même si toutes les fautes ne conduisent pas automatiquement à un carton.
+
+### Choix de la visualisation
+
+Nous utilisons un nuage de points afin d’étudier la relation entre deux variables numériques : le nombre de fautes commises et le nombre de cartons reçus.
+
+Chaque point représente une équipe lors d’un match, qu’elle joue à domicile ou à l’extérieur. L’axe horizontal indique le nombre de fautes commises, tandis que l’axe vertical indique le nombre de cartons reçus. Une droite de tendance est ajoutée afin de visualiser plus clairement la relation générale entre ces deux variables.
+
+Le léger décalage des points permet de limiter leur superposition et de rendre la visualisation plus lisible.
+
+```{r q16-fautes-cartons, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+epl_q16 <- epl %>%
+  filter(
+    !is.na(HF), !is.na(AF),
+    !is.na(HY), !is.na(AY)
+  ) %>%
+  transmute(
+    # Observation de l'équipe à domicile :
+    # on associe ses fautes commises à ses cartons jaunes reçus.
+    Fautes = HF,
+    Cartons = HY
+  ) %>%
+  bind_rows(
+    epl %>%
+      filter(
+        !is.na(HF), !is.na(AF),
+        !is.na(HY), !is.na(AY)
+      ) %>%
+      transmute(
+        # Observation de l'équipe à l'extérieur :
+        # même logique, mais avec les variables de l'équipe visiteuse.
+        Fautes = AF,
+        Cartons = AY
+      )
+  )
+
+ggplot(epl_q16, aes(x = Fautes, y = Cartons)) +
+  geom_jitter(
+    width = 0.25,
+    height = 0.10,
+    alpha = 0.25,
+    size = 1.4
+  ) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE,
+    linewidth = 1
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 35, 5),
+    limits = c(0, 35)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 10, 1),
+    limits = c(0, 10)
+  ) +
+  labs(
+    title = "Relation entre fautes commises et cartons reçus",
+    subtitle = "Chaque point représente une équipe lors d'un match",
+    x = "Nombre de fautes commises par une équipe",
+    y = "Nombre de cartons jaunes reçus par une équipe"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Analyse des résultats
+
+Le graphique montre une relation globalement positive entre le nombre de fautes commises et le nombre de cartons jaunes reçus. La droite de tendance est orientée vers le haut, ce qui indique que les équipes qui commettent davantage de fautes ont généralement tendance à recevoir plus de cartons.
+
+Cependant, la dispersion des points reste importante. Pour un même nombre de fautes, certaines équipes reçoivent peu de cartons, tandis que d’autres sont davantage sanctionnées. Cela montre que le nombre de fautes ne suffit pas à expliquer entièrement le nombre de cartons reçus.
+
+Ces résultats confirment donc partiellement notre hypothèse. Les fautes augmentent bien le risque de sanction, mais la relation n’est pas mécanique. Les cartons dépendent aussi de la gravité des fautes, du contexte du match et de l’interprétation de l’arbitre.
+
+### Critiques et limites
+
+Cette analyse prend uniquement en compte les cartons jaunes, conformément aux variables prévues dans le plan d’analyse. Elle ne tient donc pas compte des cartons rouges, qui représentent pourtant des sanctions disciplinaires plus graves.
+
+De plus, toutes les fautes sont comptabilisées de la même manière. Une faute légère au milieu du terrain et une faute dangereuse proche de la surface n’ont pourtant pas la même probabilité d’entraîner un carton.
+
+Enfin, la décision de distribuer un carton dépend aussi du contexte du match : intensité de la rencontre, répétition des fautes, moment du match ou style de l’arbitre. Ces éléments ne sont pas directement observables dans le dataset, ce qui limite l’interprétation de la relation entre fautes et cartons.
+
+## 19. Les arbitres distribuent-ils différemment les cartons ?
+
+### Hypothèse
+
+Nous supposons que le nombre de cartons distribués peut varier selon les arbitres. Certains arbitres peuvent avoir tendance à sanctionner plus fréquemment les fautes, tandis que d’autres peuvent laisser davantage jouer. Cette différence pourrait se traduire par un nombre moyen de cartons par match plus élevé chez certains arbitres.
+
+### Choix de la visualisation
+
+Nous utilisons un diagramme en barres horizontal afin de comparer le nombre moyen de cartons distribués par match selon les arbitres. Cette visualisation est adaptée car elle permet de comparer clairement plusieurs catégories, ici les arbitres, à partir d’une mesure numérique.
+
+Pour rendre le graphique lisible, nous conservons uniquement les arbitres ayant dirigé au moins 50 matchs dans le dataset. Ce choix évite de comparer des arbitres présents sur très peu de rencontres, dont la moyenne pourrait être moins représentative.
+
+```{r q19-arbitres-cartons, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=6, fig.align='center', out.width='90%'}
+epl_q19 <- epl %>%
+  filter(
+    !is.na(Referee),
+    !is.na(HY), !is.na(AY),
+    !is.na(HR), !is.na(AR)
+  ) %>%
+  mutate(
+    # Nombre total de cartons distribués pendant le match.
+    # Les cartons jaunes et rouges des deux équipes sont additionnés.
+    TotalCards = HY + AY + HR + AR
+  ) %>%
+  group_by(Referee) %>%
+  summarise(
+    # Nombre de matchs arbitrés dans le dataset.
+    Nb_matchs = n(),
+
+    # Moyenne de cartons distribués par match pour chaque arbitre.
+    Cartons_moyens = mean(TotalCards, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Nb_matchs >= 50) %>%
+  arrange(Cartons_moyens) %>%
+  mutate(
+    Referee = factor(Referee, levels = Referee)
+  )
+
+ggplot(epl_q19, aes(x = Referee, y = Cartons_moyens)) +
+  geom_col(width = 0.7) +
+  coord_flip() +
+  scale_y_continuous(
+    breaks = seq(0, 6, 0.5),
+    limits = c(0, 6)
+  ) +
+  labs(
+    title = "Nombre moyen de cartons distribués selon l'arbitre",
+    subtitle = "Arbitres ayant dirigé au moins 50 matchs",
+    x = "Arbitre",
+    y = "Nombre moyen de cartons par match"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Analyse des résultats
+
+Le graphique montre que le nombre moyen de cartons distribués varie selon les arbitres. Certains arbitres présentent une moyenne de cartons par match plus élevée, tandis que d’autres se situent à un niveau plus faible.
+
+Ces différences suggèrent que tous les arbitres ne sanctionnent pas les rencontres de la même manière. Un arbitre avec une moyenne plus élevée peut être associé à des matchs plus sanctionnés, tandis qu’un arbitre avec une moyenne plus basse peut sembler moins strict ou diriger des rencontres moins tendues.
+
+Cependant, les écarts doivent être interprétés avec prudence. Le nombre moyen de cartons ne dépend pas uniquement de l’arbitre : il peut aussi être influencé par le style des équipes, l’intensité du match, l’enjeu de la rencontre ou encore la période étudiée.
+
+### Critiques et limites
+
+Cette analyse compare les arbitres à partir du nombre moyen de cartons distribués par match. Or, une moyenne peut masquer une forte variabilité entre les rencontres. Deux arbitres peuvent avoir une moyenne similaire tout en ayant des profils différents : l’un peut distribuer régulièrement un nombre moyen de cartons, tandis qu’un autre peut alterner entre des matchs très calmes et des matchs très sanctionnés.
+
+De plus, les cartons jaunes et rouges sont additionnés dans une même variable, alors qu’ils ne représentent pas le même niveau de sanction. Un carton rouge a un impact beaucoup plus fort sur le déroulement du match qu’un carton jaune.
+
+Enfin, cette analyse ne permet pas d’affirmer qu’un arbitre est directement responsable d’un nombre plus élevé de cartons. Les données ne prennent pas en compte le contexte précis des matchs, comme les rivalités, l’importance du match, le style de jeu des équipes ou la gravité des fautes commises.
+  
 ## Question 20 — Le nombre de buts évolue-t-il selon les saisons ?
 
 ### Hypothèse
