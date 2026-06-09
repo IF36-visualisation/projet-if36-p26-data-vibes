@@ -352,7 +352,7 @@ ggplot(retournement_data, aes(x = 2, y = Pourcentage, fill = Retournement)) +
 
 ### Analyse des résultats
 
-Le diagramme montre que les retournements complets représentent une faible part des matchs étudiés. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
+Le diagramme montre que les retournements complets représentent seulement 3,7 % des matchs étudiés, contre 96,3 % de matchs sans retournement complet. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
 
 Ce résultat confirme notre hypothèse : mener à la mi-temps constitue généralement un avantage important pour l’issue du match. La visualisation permet ainsi de mettre en évidence le caractère minoritaire de ce phénomène.
 
