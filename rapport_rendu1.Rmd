@@ -596,6 +596,173 @@ Cependant, cette visualisation ne mesure pas précisément la qualité des occas
 
 Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe ou d’utiliser des indicateurs plus précis comme la position du tir ou les expected goals.
 
+## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
+
+### Hypothèse
+
+Nous supposons que les matchs avec beaucoup de buts ne sont pas forcément les plus équilibrés. Un match très ouvert peut correspondre à une rencontre spectaculaire et serrée, mais aussi à une large victoire d’une équipe.
+
+### Choix de la visualisation
+
+Nous utilisons un nuage de points afin d’étudier la relation entre le nombre total de buts dans un match et l’écart final au score. Cette visualisation permet de voir si les matchs riches en buts sont plutôt serrés ou déséquilibrés.
+```{r q13-equilibre-tirs-nul, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+
+epl_q13 <- epl %>%
+  filter(!is.na(FTHG), !is.na(FTAG)) %>%
+  mutate(
+    # Nombre total de buts dans le match.
+    TotalGoals = FTHG + FTAG,
+
+    # Écart absolu au score final.
+    # Une valeur faible indique un match serré.
+    # Une valeur élevée indique un match déséquilibré.
+    GoalDiff = abs(FTHG - FTAG)
+  )
+
+ggplot(epl_q13, aes(x = TotalGoals, y = GoalDiff)) +
+  geom_jitter(
+    width = 0.15,
+    height = 0.08,
+    alpha = 0.30,
+    size = 1.8
+  ) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
+  scale_x_continuous(
+    breaks = seq(0, 10, 1),
+    limits = c(0, 10)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 10, 1),
+    limits = c(0, 10)
+  ) +
+  labs(
+    title = "Nombre de buts et écart au score final",
+    subtitle = "Chaque point représente un match de Premier League",
+    x = "Nombre total de buts dans le match",
+    y = "Écart au score final"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+### Analyse des résultats
+
+Le graphique montre que les matchs avec peu de buts présentent souvent un écart au score limité. Cela correspond notamment aux scores serrés comme 0-0, 1-0 ou 1-1.
+
+Lorsque le nombre total de buts augmente, l’écart au score peut aussi augmenter. Cela montre que les matchs les plus ouverts ne sont pas toujours les plus imprévisibles : certains sont spectaculaires mais restent déséquilibrés.
+
+### Critiques et limites
+
+Cette analyse mesure l’équilibre d’un match uniquement avec l’écart final au score. Elle ne permet pas de savoir si le match a réellement été disputé pendant toute sa durée.
+
+De plus, un score final serré ne signifie pas forcément que les deux équipes ont eu le même niveau de domination. Des variables comme les tirs, les tirs cadrés ou la possession permettraient de compléter l’analyse.
+
+## 14. Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ?
+
+### Hypothèse
+
+Nous supposons que les meilleures équipes ne sont pas seulement celles qui tirent beaucoup, mais aussi celles qui convertissent efficacement leurs tirs en buts. Une équipe très performante offensivement devrait donc présenter un ratio buts/tirs plus élevé que les autres.
+
+### Choix de la visualisation
+
+Nous utilisons un diagramme en barres avec facettes afin de comparer l’efficacité offensive des cinq équipes qui ont marqué le plus de buts dans le dataset.
+
+Cette visualisation permet de comparer séparément les profils des équipes sélectionnées. L’efficacité est mesurée par le ratio entre le nombre de buts marqués et le nombre de tirs effectués. Plus ce ratio est élevé, plus l’équipe transforme efficacement ses tirs en buts.
+
+```{r q14-efficacite-equipes, echo=FALSE, message=FALSE, warning=FALSE, fig.width=9, fig.height=5, fig.align='center', out.width='95%'}
+epl_q14_long <- epl %>%
+  filter(
+    !is.na(HomeTeam), !is.na(AwayTeam),
+    !is.na(HS), !is.na(AS),
+    !is.na(FTHG), !is.na(FTAG)
+  ) %>%
+  transmute(
+    HomeTeam, AwayTeam, HS, AS, FTHG, FTAG
+  ) %>%
+  bind_rows(
+    epl %>%
+      filter(!is.na(HomeTeam), !is.na(HS), !is.na(FTHG)) %>%
+      transmute(
+        Team = HomeTeam,
+        Shots = HS,
+        Goals = FTHG
+      ),
+    epl %>%
+      filter(!is.na(AwayTeam), !is.na(AS), !is.na(FTAG)) %>%
+      transmute(
+        Team = AwayTeam,
+        Shots = AS,
+        Goals = FTAG
+      )
+  ) %>%
+  filter(!is.na(Team), !is.na(Shots), !is.na(Goals))
+
+top5_teams_q14 <- epl_q14_long %>%
+  group_by(Team) %>%
+  summarise(
+    TotalGoals = sum(Goals, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(TotalGoals)) %>%
+  slice_head(n = 5) %>%
+  pull(Team)
+
+epl_q14 <- epl_q14_long %>%
+  filter(Team %in% top5_teams_q14) %>%
+  group_by(Team) %>%
+  summarise(
+    # Total des tirs et des buts pour mesurer l'efficacité globale.
+    TotalShots = sum(Shots, na.rm = TRUE),
+    TotalGoals = sum(Goals, na.rm = TRUE),
+
+    # Ratio d'efficacité offensive : part des tirs transformés en buts.
+    Efficacite = TotalGoals / TotalShots,
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Team = reorder(Team, Efficacite)
+  )
+
+ggplot(epl_q14, aes(x = Team, y = Efficacite)) +
+  geom_col(width = 0.65) +
+  coord_flip() +
+  scale_y_continuous(
+    labels = scales::percent_format(accuracy = 0.1),
+    breaks = seq(0, 0.20, 0.02),
+    limits = c(0, 0.20)
+  ) +
+  labs(
+    title = "Efficacité offensive des 5 équipes les plus prolifiques",
+    subtitle = "Ratio buts/tirs calculé sur l'ensemble des matchs disponibles",
+    x = "Équipe",
+    y = "Efficacité offensive (buts / tirs)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+### Analyse des résultats
+
+Le graphique compare l’efficacité offensive des cinq équipes ayant marqué le plus de buts dans le dataset. Les différences observées montrent que les meilleures attaques ne se distinguent pas uniquement par leur volume de buts, mais aussi par leur capacité à transformer leurs tirs en buts.
+
+Une équipe avec un ratio buts/tirs plus élevé apparaît plus efficace, car elle marque davantage par rapport au nombre de tirs tentés. À l’inverse, une équipe avec un ratio plus faible peut rester très prolifique grâce à un volume de tirs important, mais être moins efficace dans la conversion de ses occasions.
+
+Cette analyse permet donc de nuancer le classement des meilleures attaques. Marquer beaucoup de buts ne signifie pas nécessairement être l’équipe la plus efficace : certaines équipes peuvent compenser une efficacité plus faible par une production offensive très élevée.
+
+### Critiques et limites
+
+Le ratio buts/tirs donne une indication simple de l’efficacité offensive, mais il ne tient pas compte de la qualité des tirs. Une équipe peut avoir un bon ratio parce qu’elle se crée des occasions très dangereuses, ou parce qu’elle bénéficie de situations particulières comme des penalties.
+
+De plus, cette analyse sélectionne les cinq équipes ayant marqué le plus de buts. Elle ne permet donc pas de comparer toutes les équipes du championnat, notamment celles qui tirent peu mais peuvent être très efficaces.
+
+Enfin, les données sont agrégées sur plusieurs saisons. Les effectifs, les entraîneurs et les styles de jeu des équipes ont pu évoluer au fil du temps, ce qui limite l’interprétation directe des différences observées.
+
 ## 16. Existe-t-il une relation entre fautes et cartons ?
 
 ### Hypothèse
@@ -681,6 +848,156 @@ Toutefois, la dispersion des points montre que cette relation n'est pas parfaite
 Cette analyse repose uniquement sur les cartons jaunes et ne prend pas en compte les cartons rouges.
 
 Par ailleurs, toutes les fautes sont comptabilisées de la même manière alors que certaines sont plus sévères que d'autres. Le contexte du match ou les décisions arbitrales peuvent également influencer le nombre de cartons distribués.
+
+## 17. Les arbitres sanctionnent-ils de la même manière un nombre donné de fautes ?
+
+### Hypothèse
+
+Nous supposons qu’à nombre de fautes comparable, certains arbitres distribuent davantage de cartons que d’autres. Cela pourrait traduire des différences dans leur manière de sanctionner les rencontres.
+
+### Choix de la visualisation
+
+Nous utilisons un nuage de points afin de comparer, pour chaque arbitre, le nombre moyen de fautes observées et le nombre moyen de cartons distribués. Cette visualisation permet de voir si les arbitres qui dirigent des matchs plus fautifs distribuent aussi davantage de cartons.
+
+```{r q17-arbitres-fautes-cartons, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
+epl_q17 <- epl %>%
+  filter(
+    !is.na(Referee),
+    !is.na(HF), !is.na(AF),
+    !is.na(HY), !is.na(AY),
+    !is.na(HR), !is.na(AR)
+  ) %>%
+  mutate(
+    # Nombre total de fautes commises par les deux équipes.
+    TotalFouls = HF + AF,
+
+    # Nombre total de cartons distribués dans le match.
+    TotalCards = HY + AY + HR + AR
+  ) %>%
+  group_by(Referee) %>%
+  summarise(
+    Nb_matchs = n(),
+    Fautes_moyennes = mean(TotalFouls, na.rm = TRUE),
+    Cartons_moyens = mean(TotalCards, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Nb_matchs >= 50)
+
+ggplot(epl_q17, aes(x = Fautes_moyennes, y = Cartons_moyens)) +
+  geom_point(aes(size = Nb_matchs), alpha = 0.55,color="steelblue") +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1,color = "red") +
+  scale_x_continuous(
+    breaks = seq(15, 35, 2),
+    limits = c(15, 35)
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 6, 0.5),
+    limits = c(0, 6)
+  ) +
+  scale_size_continuous(
+    range = c(2, 6),
+    breaks = c(50, 100, 200, 300, 400, 500)
+  ) +
+  labs(
+    title = "Fautes moyennes et cartons moyens selon les arbitres",
+    subtitle = "Arbitres ayant arbitré au moins 50 matchs",
+    x = "Nombre moyen de fautes par match",
+    y = "Nombre moyen de cartons par match",
+    size = "Nombre de matchs"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+### Analyse des résultats
+
+Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
+
+Cependant, tous les points ne sont pas parfaitement alignés. Pour un niveau de fautes proche, certains arbitres distribuent plus de cartons que d’autres. Cela suggère que la sanction ne dépend pas seulement du nombre de fautes, mais aussi de l’interprétation de l’arbitre.
+
+### Critiques et limites
+
+Cette analyse repose sur des moyennes par arbitre, ce qui peut masquer des différences importantes entre les matchs.
+
+De plus, le graphique ne prend pas en compte la gravité des fautes ni le contexte des rencontres. Un même nombre de fautes peut donc conduire à un nombre de cartons différent selon la nature du match.
+
+## 18. Certaines équipes sont-elles plus sanctionnées que d'autres ?
+
+### Hypothèse
+
+Nous supposons que certaines équipes reçoivent davantage de cartons que d’autres. Ces différences peuvent être liées au style de jeu, au niveau d’agressivité, à la stratégie défensive ou encore à la fréquence des situations de pression subies pendant les matchs.
+
+### Choix de la visualisation
+
+Nous utilisons un diagramme en barres horizontal afin de comparer le nombre moyen de cartons reçus par match selon les équipes.
+
+Pour rendre le graphique lisible, nous affichons uniquement les 15 équipes les plus sanctionnées en moyenne. Cette visualisation permet d’identifier rapidement les équipes qui se distinguent par un niveau de sanction plus élevé.
+
+```{r q18-equipes-sanctionnees, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=6, fig.align='center', out.width='90%'}
+
+epl_q18 <- bind_rows(
+  epl %>%
+    filter(!is.na(HomeTeam), !is.na(HY), !is.na(HR)) %>%
+    transmute(
+      # Cartons reçus par l'équipe à domicile.
+      Team = HomeTeam,
+      Cards = HY + HR
+    ),
+  epl %>%
+    filter(!is.na(AwayTeam), !is.na(AY), !is.na(AR)) %>%
+    transmute(
+      # Cartons reçus par l'équipe à l'extérieur.
+      Team = AwayTeam,
+      Cards = AY + AR
+    )
+) %>%
+  group_by(Team) %>%
+  summarise(
+    Nb_matchs = n(),
+    Cartons_moyens = mean(Cards, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Nb_matchs >= 50) %>%
+  arrange(desc(Cartons_moyens)) %>%
+  slice_head(n = 15) %>%
+  mutate(
+    Team = reorder(Team, Cartons_moyens)
+  )
+
+ggplot(epl_q18, aes(x = Team, y = Cartons_moyens)) +
+  geom_col(width = 0.70) +
+  coord_flip() +
+  scale_y_continuous(
+    breaks = seq(0, 4, 0.5),
+    limits = c(0, 4)
+  ) +
+  labs(
+    title = "Équipes les plus sanctionnées en moyenne",
+    subtitle = "Top 15 des équipes ayant joué au moins 50 matchs",
+    x = "Équipe",
+    y = "Nombre moyen de cartons par match"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11, color = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+### Analyse des résultats
+
+Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
+
+Cependant, tous les points ne sont pas parfaitement alignés. Pour un niveau de fautes proche, certains arbitres distribuent plus de cartons que d’autres. Cela suggère que la sanction ne dépend pas seulement du nombre de fautes, mais aussi de l’interprétation de l’arbitre.
+
+### Critiques et limites
+
+Cette analyse repose sur des moyennes par arbitre, ce qui peut masquer des différences importantes entre les matchs.
+
+De plus, le graphique ne prend pas en compte la gravité des fautes ni le contexte des rencontres. Un même nombre de fautes peut donc conduire à un nombre de cartons différent selon la nature du match.
 
 ## 19. Les arbitres distribuent-ils différemment les cartons ?
 
