@@ -108,6 +108,20 @@ Cependant, cette analyse reste globale. Elle montre une tendance générale, mai
 
 Pour approfondir cette question, il serait utile d’analyser si l’avantage du terrain varie selon les saisons, selon les équipes ou selon le niveau relatif des adversaires.
 
+### Comparaison avec Power BI
+
+Nous avons également reproduit cette visualisation avec Power BI.
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("PowerBI/question2.png")
+```
+
+Le graphique réalisé avec Power BI confirme le résultat obtenu avec R : les victoires à domicile représentent la proportion la plus élevée des matchs, devant les victoires à l’extérieur et les matchs nuls.
+
+La différence principale ne vient pas du résultat obtenu, mais de la manière de produire la visualisation. Avec R, l’ajout des pourcentages, la mise en forme et les choix graphiques sont contrôlés par le code, ce qui rend la visualisation reproductible et facilement modifiable. Avec Power BI, ces éléments peuvent être ajoutés plus directement par l’interface graphique, sans écrire de code, ce qui facilite une exploration rapide et interactive.
+
+Cette comparaison montre que les deux outils conduisent à la même conclusion : il existe un avantage du terrain en Premier League. R est plus adapté pour une analyse reproductible et personnalisée, tandis que Power BI est plus pratique pour explorer visuellement les données et tester rapidement différentes représentations.
+
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
 ### Hypothèse
@@ -433,6 +447,21 @@ Ces résultats confirment notre hypothèse : l’avantage acquis à la mi-temps 
 
 Cependant, cette analyse reste globale. Elle ne prend pas en compte d’autres facteurs importants, comme le moment des buts en seconde période, les cartons rouges, les blessures, les changements tactiques ou le niveau relatif des équipes.
 
+### Comparaison avec Power BI
+
+Nous avons également reproduit cette analyse avec Power BI afin de comparer le résultat avec la heatmap réalisée sous R.
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("PowerBI/question7.png")
+```
+
+La matrice réalisée avec Power BI confirme les résultats obtenus avec R. Dans les deux visualisations, les pourcentages les plus élevés correspondent aux situations où le résultat à la mi-temps se confirme à la fin du match. Par exemple, lorsque l’équipe à domicile mène à la mi-temps, elle gagne dans 80,8 % des cas. De même, lorsque l’équipe à l’extérieur mène à la mi-temps, elle gagne dans 70,1 % des cas.
+
+La différence principale concerne la forme de la visualisation. La heatmap produite avec R met davantage en valeur les écarts grâce à l’intensité des couleurs et à une légende continue, ce qui facilite la perception pré-attentive des cases les plus importantes. La visualisation Power BI est plus proche d’une matrice interactive : elle permet une lecture directe des pourcentages et peut être facilement filtrée ou modifiée dans l’interface.
+
+Cette comparaison montre que les deux outils conduisent à la même conclusion : le résultat à la mi-temps est fortement lié au résultat final. R est plus adapté pour produire une visualisation contrôlée, esthétique et reproductible, tandis que Power BI est plus pratique pour explorer rapidement les données de manière interactive.
+
+
 ## 8. La différence de tirs entre les deux équipes est-elle associée au résultat final ?
 
 ### Hypothèse
@@ -605,6 +634,8 @@ Cette analyse montre que les tirs cadrés sont un meilleur indicateur de l’eff
 Cependant, cette visualisation ne mesure pas précisément la qualité des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière. De plus, les tirs des deux équipes sont regroupés au niveau du match, ce qui ne permet pas d’analyser séparément la performance de chaque équipe.
 
 Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe ou d’utiliser des indicateurs plus précis comme la position du tir ou les expected goals.
+
+
 
 ## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
 
