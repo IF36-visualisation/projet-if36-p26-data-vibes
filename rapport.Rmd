@@ -1,5 +1,5 @@
 ---
-title: "Rendu 1"
+title: "Rapport"
 author: DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU
   Tatiana
 date: "2026-04-20"
@@ -53,11 +53,15 @@ Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie 
 
 ### Hypothèse
 
-Nous supposons que les équipes jouant à domicile gagnent plus souvent que les équipes à l’extérieur.
+Nous supposons que les équipes jouant à domicile obtiennent une proportion de victoires plus élevée que les équipes jouant à l’extérieur. Cette hypothèse repose sur l’idée que le fait de jouer à domicile peut constituer un avantage : les équipes bénéficient du soutien de leurs supporters, connaissent mieux leur stade et peuvent être moins affectées par les déplacements.
 
 ### Choix de la visualisation
 
-Nous utilisons un diagramme en barres pour comparer les proportions de victoires à domicile, de matchs nuls et de victoires à l’extérieur. Cette visualisation permet de voir rapidement si les résultats sont équilibrés ou non.
+Nous utilisons un diagramme en barres pour comparer les proportions de victoires à domicile, de matchs nuls et de victoires à l’extérieur.
+
+Cette question relève d’un objectif de comparaison et de répartition, car nous cherchons à comparer la fréquence des différents résultats possibles. La variable étudiée, le résultat final du match, est une variable nominale composée de trois catégories : victoire à domicile, match nul et victoire à l’extérieur.
+
+Le diagramme en barres est adapté à ce type de données, car il permet de comparer des catégories nominales à partir d’une valeur quantitative, ici la proportion des matchs. L’encodage visuel par la longueur des barres facilite une lecture rapide et une estimation relativement précise des écarts entre les catégories. Ce choix s’appuie sur les principes de perception graphique et de magnitude estimation : la longueur est un encodage plus fiable que la surface ou l’intensité de couleur pour comparer des valeurs.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 home_adv <- epl %>%
@@ -92,15 +96,31 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
 
 ### Analyse des résultats
 
-Le graphique montre que les victoires à domicile sont plus fréquentes que les victoires à l’extérieur. Les matchs nuls occupent une position intermédiaire.
+Le graphique montre que les victoires à domicile représentent la catégorie la plus fréquente parmi les résultats des matchs. Les victoires à l’extérieur sont moins nombreuses, tandis que les matchs nuls occupent une position intermédiaire.
 
-Ce résultat suggère l’existence d’un avantage du terrain en Premier League : jouer à domicile semble augmenter les chances de victoire.
+Cette différence indique que les résultats ne sont pas parfaitement équilibrés entre domicile et extérieur. La visualisation permet donc d’identifier rapidement une tendance générale : les équipes semblent gagner plus souvent lorsqu’elles jouent à domicile.
 
 ### Interprétation et limites
 
-Cette analyse met en évidence une tendance générale en faveur des équipes à domicile. Elle confirme donc l’hypothèse de départ.
+Ces résultats confirment notre hypothèse de départ : il existe un avantage du terrain en Premier League sur la période étudiée. Cet avantage peut être interprété comme le résultat de plusieurs facteurs possibles, notamment le soutien du public, la familiarité avec le stade et l’absence de déplacement pour l’équipe à domicile.
 
-Cependant, elle ne permet pas d’expliquer précisément les causes de cet avantage. D’autres facteurs, comme le niveau des équipes, la saison, la forme du moment ou l’adversaire rencontré, peuvent aussi influencer les résultats.
+Cependant, cette analyse reste globale. Elle montre une tendance générale, mais elle ne permet pas d’expliquer précisément les causes de cet avantage. D’autres variables pourraient influencer les résultats, comme le niveau des équipes, la saison, la forme du moment, l’adversaire rencontré ou encore l’évolution du football au fil du temps.
+
+Pour approfondir cette question, il serait utile d’analyser si l’avantage du terrain varie selon les saisons, selon les équipes ou selon le niveau relatif des adversaires.
+
+### Comparaison avec Power BI
+
+Nous avons également reproduit cette visualisation avec Power BI.
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("PowerBI/question2.png")
+```
+
+Le graphique réalisé avec Power BI confirme le résultat obtenu avec R : les victoires à domicile représentent la proportion la plus élevée des matchs, devant les victoires à l’extérieur et les matchs nuls.
+
+La différence principale ne vient pas du résultat obtenu, mais de la manière de produire la visualisation. Avec R, l’ajout des pourcentages, la mise en forme et les choix graphiques sont contrôlés par le code, ce qui rend la visualisation reproductible et facilement modifiable. Avec Power BI, ces éléments peuvent être ajoutés plus directement par l’interface graphique, sans écrire de code, ce qui facilite une exploration rapide et interactive.
+
+Cette comparaison montre que les deux outils conduisent à la même conclusion : il existe un avantage du terrain en Premier League. R est plus adapté pour une analyse reproductible et personnalisée, tandis que Power BI est plus pratique pour explorer visuellement les données et tester rapidement différentes représentations.
 
 ## 3. Quelle est la distribution du nombre de buts par match ?
 
@@ -294,15 +314,15 @@ Cette visualisation permet donc d’étudier les changements d’issue du match,
 
 ### Hypothèse
 
-Nous supposons que les retournements complets sont rares en Premier League. Une équipe qui mène à la mi-temps conserve souvent un avantage important jusqu’à la fin du match.
+Nous supposons que les retournements complets sont rares en Premier League. En effet, une équipe qui mène à la mi-temps possède souvent un avantage psychologique et tactique : elle peut mieux contrôler le rythme du match, tandis que l’équipe adverse doit prendre plus de risques pour revenir au score.
 
 ### Choix de la visualisation
 
-Nous utilisons un diagramme en anneau afin de représenter la part des matchs avec retournement complet dans l’ensemble des matchs. Ce choix est adapté car la question porte principalement sur une proportion globale.
+Nous utilisons un graphique en anneau afin de représenter la part des matchs avec retournement complet dans l’ensemble des matchs. Cette question relève d’un objectif de répartition, car nous cherchons à visualiser la proportion d’un phénomène par rapport au total des rencontres.
 
-Dans cette analyse, un retournement complet correspond aux situations où l’équipe qui mène à la mi-temps perd finalement le match : `HTR = H` et `FTR = A`, ou `HTR = A` et `FTR = H`.
+Dans cette analyse, un retournement complet correspond aux situations où l’équipe qui mène à la mi-temps perd finalement le match : HTR = H et FTR = A, ou HTR = A et FTR = H. Les matchs passant d’un score nul à une victoire ne sont donc pas considérés ici comme des retournements complets.
 
-Les matchs passant d’un score nul à une victoire ne sont donc pas considérés ici comme des retournements complets.
+Le graphique en anneau est proche du diagramme circulaire, mais son espace central permet de mettre en valeur l’information principale : la proportion de matchs avec retournement. Ce choix est pertinent ici car l’objectif n’est pas de comparer de nombreuses catégories, mais de montrer rapidement si les retournements représentent une part importante ou minoritaire des matchs.
 ```{r q6-retournement, echo=FALSE, message=FALSE, warning=FALSE}
 retournement_data <- epl %>%
   mutate(
@@ -346,25 +366,27 @@ ggplot(retournement_data, aes(x = 2, y = Pourcentage, fill = Retournement)) +
 
 ### Analyse des résultats
 
-Le diagramme montre que les retournements complets représentent une faible part des matchs étudiés. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
+Le diagramme montre que les retournements complets représentent seulement 3,7 % des matchs étudiés, contre 96,3 % de matchs sans retournement complet. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
 
-Ce résultat confirme l’hypothèse : le fait de mener à la mi-temps constitue généralement un avantage important pour l’issue du match.
+Ce résultat confirme notre hypothèse : mener à la mi-temps constitue généralement un avantage important pour l’issue du match. La visualisation permet ainsi de mettre en évidence le caractère minoritaire de ce phénomène.
 
 ### Interprétation et limites
 
-Cette analyse repose uniquement sur le résultat à la mi-temps et le résultat final. Elle ne prend pas en compte le moment exact des buts, les cartons rouges, les blessures ou les changements tactiques.
+Ces résultats suggèrent qu’une équipe en tête à la mi-temps conserve souvent une position favorable jusqu’à la fin du match. Cela peut s’expliquer par une meilleure maîtrise tactique, une gestion du score ou un avantage psychologique.
 
-De plus, les matchs qui passent d’un score nul à une victoire peuvent aussi être décisifs, mais ils ne sont pas considérés ici comme des retournements complets.
+Cependant, cette analyse reste globale. Elle ne prend pas en compte le moment exact des buts, les cartons rouges, les blessures, les changements tactiques ou le niveau relatif des équipes. De plus, les matchs passant d’un score nul à une victoire ne sont pas inclus dans notre définition du retournement complet.
 
 ## 7. Le résultat à la mi-temps prédit-il le résultat final ?
 
 ### Hypothèse
 
-Nous supposons que le résultat à la mi-temps est fortement lié au résultat final. Une équipe qui mène à la pause a plus de chances de gagner le match.
+Nous supposons que le résultat à la mi-temps est fortement lié au résultat final. Une équipe qui mène à la pause a plus de chances de gagner le match, car elle dispose déjà d’un avantage au score et peut adapter sa stratégie en seconde période pour conserver cet avantage.
 
 ### Choix de la visualisation
 
-Nous utilisons une heatmap pour croiser le résultat à la mi-temps et le résultat final. Cette visualisation permet d’identifier rapidement les situations les plus fréquentes.
+Nous utilisons une heatmap pour croiser le résultat à la mi-temps et le résultat final. Cette question relève d’un objectif de relation entre deux variables catégorielles : HTR, qui indique le résultat à la mi-temps, et FTR, qui indique le résultat final.
+
+La heatmap est adaptée, car elle permet de visualiser rapidement les combinaisons les plus fréquentes entre ces deux variables. L’encodage par l’intensité de la couleur facilite l’identification des situations dominantes, tandis que les pourcentages affichés dans les cases permettent une lecture plus précise des résultats.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 mi_temps_final <- epl %>%
@@ -415,19 +437,36 @@ ggplot(mi_temps_final, aes(x = FTR_label, y = HTR_label, fill = Pourcentage)) +
 
 ### Analyse des résultats
 
-La heatmap montre que le résultat à la mi-temps est fortement lié au résultat final. Lorsqu’une équipe mène à la pause, elle conserve souvent son avantage jusqu’à la fin du match.
+La heatmap montre que le résultat à la mi-temps est fortement lié au résultat final. Lorsqu’une équipe mène à la pause, elle conserve souvent son avantage jusqu’à la fin du match. Les cases correspondant à une continuité entre la mi-temps et le résultat final apparaissent ainsi comme les plus importantes.
 
-En revanche, les matchs nuls à la mi-temps donnent des résultats plus variés. Le résultat à la pause constitue donc un bon indicateur de l’issue du match, sans permettre une prédiction parfaite.
+En revanche, les matchs nuls à la mi-temps donnent des résultats plus variés. Le résultat à la pause constitue donc un bon indicateur de l’issue du match, mais il ne permet pas une prédiction parfaite.
 
 ### Interprétation et limites
 
-Cette analyse met en évidence une tendance générale, mais elle ne prend pas en compte d’autres facteurs, comme les buts en seconde période, les cartons rouges, les blessures ou les changements tactiques.
+Ces résultats confirment notre hypothèse : l’avantage acquis à la mi-temps influence fortement le résultat final. Cela peut s’expliquer par la possibilité pour l’équipe qui mène de mieux gérer le rythme du match, de défendre son avance ou de forcer l’adversaire à prendre davantage de risques.
+
+Cependant, cette analyse reste globale. Elle ne prend pas en compte d’autres facteurs importants, comme le moment des buts en seconde période, les cartons rouges, les blessures, les changements tactiques ou le niveau relatif des équipes.
+
+### Comparaison avec Power BI
+
+Nous avons également reproduit cette analyse avec Power BI afin de comparer le résultat avec la heatmap réalisée sous R.
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("PowerBI/question7.png")
+```
+
+La matrice réalisée avec Power BI confirme les résultats obtenus avec R. Dans les deux visualisations, les pourcentages les plus élevés correspondent aux situations où le résultat à la mi-temps se confirme à la fin du match. Par exemple, lorsque l’équipe à domicile mène à la mi-temps, elle gagne dans 80,8 % des cas. De même, lorsque l’équipe à l’extérieur mène à la mi-temps, elle gagne dans 70,1 % des cas.
+
+La différence principale concerne la forme de la visualisation. La heatmap produite avec R met davantage en valeur les écarts grâce à l’intensité des couleurs et à une légende continue, ce qui facilite la perception pré-attentive des cases les plus importantes. La visualisation Power BI est plus proche d’une matrice interactive : elle permet une lecture directe des pourcentages et peut être facilement filtrée ou modifiée dans l’interface.
+
+Cette comparaison montre que les deux outils conduisent à la même conclusion : le résultat à la mi-temps est fortement lié au résultat final. R est plus adapté pour produire une visualisation contrôlée, esthétique et reproductible, tandis que Power BI est plus pratique pour explorer rapidement les données de manière interactive.
+
 
 ## 8. La différence de tirs entre les deux équipes est-elle associée au résultat final ?
 
 ### Hypothèse
 
-Nous supposons que la différence de tirs entre les deux équipes est liée au résultat final du match. Plus une équipe tire davantage que son adversaire, plus elle devrait avoir de chances de gagner. Cependant, cette relation n’est pas forcément automatique, car le nombre de tirs ne prend pas en compte la qualité des occasions.
+Nous supposons que la différence de tirs entre les deux équipes est liée au résultat final du match. Plus une équipe tire davantage que son adversaire, plus elle devrait avoir de chances de gagner, car un avantage en tirs peut refléter une domination offensive ou une meilleure capacité à créer des occasions. Cependant, cette relation n’est pas automatique, car le nombre de tirs ne prend pas en compte la qualité des occasions.
 
 ### Choix de la visualisation
 
@@ -595,6 +634,8 @@ Cette analyse montre que les tirs cadrés sont un meilleur indicateur de l’eff
 Cependant, cette visualisation ne mesure pas précisément la qualité des occasions. Un tir cadré facile à arrêter et une occasion très dangereuse sont comptés de la même manière. De plus, les tirs des deux équipes sont regroupés au niveau du match, ce qui ne permet pas d’analyser séparément la performance de chaque équipe.
 
 Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe ou d’utiliser des indicateurs plus précis comme la position du tir ou les expected goals.
+
+
 
 ## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
 
