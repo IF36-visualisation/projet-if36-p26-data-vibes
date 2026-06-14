@@ -14,10 +14,31 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
+knitr::opts_chunk$set(
+  echo    = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  fig.width = 9,
+  fig.height = 5
+)
 
-epl <- read_csv("data/results.csv")
+library(tidyverse)
+library(ggridges)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(readr)
+
+epl <- read_csv(here("data", "results.csv")) %>%
+  filter(!is.na(HS) & !is.na(AS)) %>%
+  mutate(
+    TotalGoals = FTHG + FTAG,
+    TotalShots = HS + AS,
+    ShotDiff   = HS - AS,
+    TotalFouls = HF + AF,
+    TotalCards = HY + AY + HR + AR
+  )
 ```
 # Introduction
 
@@ -132,15 +153,6 @@ On peut supposer que la majorité des matchs comportent un nombre modéré de bu
 ### Choix de la visualisation
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(dplyr)
-library(ggplot2)
-library(readr)
-
-epl <- read_csv("data/results.csv") %>%
-  
-# Création de la variable TotalGoals
-  mutate(TotalGoals = FTHG + FTAG)
-
 # Histogramme
 ggplot(epl, aes(x = TotalGoals)) +
   geom_histogram(
@@ -689,6 +701,7 @@ ggplot(epl_q13, aes(x = TotalGoals, y = GoalDiff)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 
 Le graphique montre que les matchs avec peu de buts présentent souvent un écart au score limité. Cela correspond notamment aux scores serrés comme 0-0, 1-0 ou 1-1.
@@ -788,6 +801,7 @@ ggplot(epl_q14, aes(x = Team, y = Efficacite)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 
 Le graphique compare l’efficacité offensive des cinq équipes ayant marqué le plus de buts dans le dataset. Les différences observées montrent que les meilleures attaques ne se distinguent pas uniquement par leur volume de buts, mais aussi par leur capacité à transformer leurs tirs en buts.
@@ -953,6 +967,7 @@ ggplot(epl_q17, aes(x = Fautes_moyennes, y = Cartons_moyens)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 
 Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
@@ -1028,6 +1043,7 @@ ggplot(epl_q18, aes(x = Team, y = Cartons_moyens)) +
     panel.grid.minor = element_blank()
   )
 ```
+
 ### Analyse des résultats
 
 Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
@@ -1122,15 +1138,6 @@ On peut supposer que certaines saisons sont plus offensives que d’autres, ce q
 
 ### Choix de la visualisation
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(dplyr)
-library(ggplot2)
-library(readr)
-
-# On ajoute une variable représentant le total de buts par match
-epl <- read_csv("data/results.csv") %>%
-  mutate(TotalGoals = FTHG + FTAG)
-
-
 # Calcul de la moyenne de buts par saison
 season_goals <- epl %>%
   filter(!is.na(Season), !is.na(TotalGoals)) %>%
@@ -1171,3 +1178,243 @@ Ces résultats indiquent que le nombre de buts par match en Premier League reste
 Il faut cependant rester prudent dans l’interprétation. Le graphique permet d’observer une évolution du nombre de buts, mais il ne permet pas d’expliquer directement les causes de ces variations. Celles-ci peuvent être liées à de nombreux facteurs, comme les styles de jeu, le niveau des équipes, les changements tactiques ou encore l’évolution du championnat.
 
 Ainsi, on peut parler d’une légère tendance à la hausse dans les saisons récentes, mais il serait nécessaire d’analyser d’autres variables pour confirmer l’idée d’un championnat plus offensif ou plus spectaculaire.
+
+---
+## Question 11 — La quantité de tirs garantit-elle la victoire ?
+
+### Hypothèse
+Les équipes victorieuses à domicile affichent un différentiel de tirs (`ShotDiff`) largement positif, tandis que les équipes battues à domicile affichent un différentiel négatif.
+Le volume de tirs serait ainsi le premier indicateur de la victoire.
+
+### Choix de visualisation
+
+Un **Density Ridge Plot** (graphique de densité de crêtes) représente la distribution *continue* du
+différentiel de tirs (`ShotDiff = HS − AS`) pour chacune des trois issues finales du match.
+
+| Code `FTR` | Signification             |
+|:----------:|:--------------------------|
+| `H`        | Victoire à domicile       |
+| `D`        | Match nul                 |
+| `A`        | Victoire à l'extérieur    |
+
+Ce choix est préféré au boxplot classique pour deux raisons :
+
+- **Richesse de l'information** : la forme de la courbe révèle la concentration réelle des matchs
+  (bimodalité, queues longues) là où le boxplot ne synthétise que cinq quantiles.
+- **Lisibilité** : les vagues superposées rendent les décalages entre groupes immédiatement perceptibles, sans nécessiter de lecture des médianes chiffrées.
+
+```{r q11-ridge-shot-diff, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(epl, aes(x = ShotDiff, y = FTR, fill = FTR)) +
+  geom_density_ridges(
+    alpha         = 0.7,
+    scale         = 1.2,
+    rel_min_height = 0.01
+  ) +
+  scale_fill_manual(
+    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
+  ) +
+  labs(
+    title    = "Densité du différentiel de tirs selon le résultat final",
+    subtitle = "Chaque crête représente la concentration des matchs (HS − AS)",
+    x        = "Différentiel de tirs (Domicile − Extérieur)",
+    y        = "Résultat final"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+### Analyse des résultats
+Le pic de la crête verte (`H`) se situe nettement **au-delà de zéro (≈ +5)**, tandis que la crête rouge (`A`) est centrée sur des valeurs **négatives (≈ −3)**. La crête grise (`D`) se concentre autour de **zéro**, confirmant l'équilibre aux tirs lors des matchs nuls.
+
+Le volume de tirs est un indicateur fort du résultat. Toutefois, l'**étalement** des crêtes — en particulier celle des victoires à domicile — révèle qu'un différentiel positif reste une condition favorable, non suffisante.
+
+### Critique et limites
+Le `ShotDiff` ne tient pas compte du **bloc défensif** : une équipe qui mène peut volontairement
+reculer et contrer, affichant un différentiel négatif tout en maîtrisant le match.
+
+## Question 12 — Quelle est la fréquence des hold-ups ?
+Un *hold-up* désigne une équipe qui remporte le match en ayant tenté **moins de tirs** que son adversaire.
+
+### Hypothèse
+Les hold-ups sont des anomalies statistiques rares, représentant **moins de 15 %** des rencontres.
+
+### Choix de visualisation
+Un **nuage de points** croise les tirs à domicile et à l'extérieur, coloré par résultat. La diagonale $x = y$ sépare visuellement la domination théorique aux tirs.
+
+```{r q12-scatter-holdup, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(epl, aes(x = HS, y = AS, color = FTR)) +
+  geom_point(alpha = 0.4, size = 1.5) +
+  geom_abline(
+    intercept = 0, slope = 1,
+    linetype = "dashed", color = "black", linewidth = 1
+  ) +
+  scale_color_manual(
+    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
+  ) +
+  labs(
+    title    = "Confrontation des tirs et détection des hold-ups",
+    subtitle = "La ligne pointillée sépare la domination territoriale aux tirs",
+    x        = "Nombre de tirs — équipe à domicile (HS)",
+    y        = "Nombre de tirs — équipe à l'extérieur (AS)",
+    color    = "Résultat"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+### Analyse des résultats
+- Les **points rouges** (`A`) situés **sous** la diagonale (domicile tire plus mais perd) = hold-ups subis.
+- Les **points verts** (`H`) situés **au-dessus** de la diagonale (extérieur tire plus mais perd) = hold-ups réalisés.
+La densité de ces points "inversés" est loin d'être négligeable. Le football, sport à faible score, résiste régulièrement à la domination statistique globale.
+
+### Critique et limites
+Le graphique **sature** en raison du grand nombre d'observations. Par ailleurs, compter les tirs totaux masque la **dangerosité réelle** des actions — les *Expected Goals* (xG) ou les tirs cadrés
+offriraient un filtre nettement plus pertinent.
+
+## Question 15 — L'agressivité (fautes) pénalise-t-elle le résultat final ?
+
+### Hypothèse
+Commettre plus de fautes que l'adversaire traduit une frustration ou une perte de contrôle du jeu,
+et est donc corrélé à un résultat négatif (défaite).
+
+### Choix de visualisation
+Un **boxplot jumelé** compare la distribution des fautes commises à domicile (`HF`) et à l'extérieur (`AF`) selon l'issue du match.
+
+```{r q15-boxplot-fouls, echo=FALSE, message=FALSE, warning=FALSE}
+epl %>%
+  select(FTR, HF, AF) %>%
+  pivot_longer(
+    cols      = c(HF, AF),
+    names_to  = "Lieu",
+    values_to = "Fautes"
+  ) %>%
+  ggplot(aes(x = FTR, y = Fautes, fill = Lieu)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.2) +
+  scale_fill_manual(
+    values = c("HF" = "#34495e", "AF" = "#f1c40f"),
+    labels = c("HF" = "Domicile", "AF" = "Extérieur")
+  ) +
+  labs(
+    title = "Impact du nombre de fautes sur l'issue du match",
+    x     = "Résultat du match",
+    y     = "Nombre de fautes commises",
+    fill  = "Équipe"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+### Analyse des résultats
+
+Les distributions restent **quasi-identiques** quelle que soit l'issue du match
+(médiane stable autour de 11–13 fautes).
+Le nombre brut de fautes n'a **aucun pouvoir prédictif** direct sur le résultat. Un jeu haché ou agressif fait partie intégrante de certaines stratégies sans pour autant pénaliser le score final.
+
+### Critique et limites
+Toutes les fautes n'ont pas la même valeur :
+une faute tactique au milieu de terrain pour casser une contre-attaque est **bénéfique**, tandis qu'une faute dans la surface entraînant un penalty est **pénalisante**.
+Le dataset ne qualifie pas la **nature** de la faute.
+
+## Question 22 — Le jeu de Premier League est-il devenu plus propre ou plus indiscipliné ?
+
+### Hypothèse
+Le football moderne étant plus rapide, plus médiatisé et mieux arbitré, le nombre de fautes **diminue** globalement tandis que le nombre de cartons **augmente** sous l'effet d'une sévérité accrue du règlement.
+
+### Choix de visualisation
+Un **graphique linéaire à double courbe** avec lissage temporel suit l'évolution conjointe des moyennes de fautes et de cartons par match à travers les saisons.
+
+```{r q22-linechart-discipline, echo=FALSE, message=FALSE, warning=FALSE}
+epl_chrono <- epl %>%
+  group_by(Season) %>%
+  summarise(
+    MoyFautes  = mean(TotalFouls, na.rm = TRUE),
+    MoyCartons = mean(TotalCards, na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    cols      = c(MoyFautes, MoyCartons),
+    names_to  = "Indicateur",
+    values_to = "Valeur"
+  )
+
+ggplot(epl_chrono, aes(x = Season, y = Valeur, group = Indicateur, color = Indicateur)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  facet_wrap(
+    ~Indicateur,
+    scales   = "free_y",
+    labeller = as_labeller(
+      c("MoyCartons" = "Cartons par match", "MoyFautes" = "Fautes par match")
+    )
+  ) +
+  scale_color_manual(
+    values = c("MoyCartons" = "#e67e22", "MoyFautes" = "#2980b9")
+  ) +
+  labs(
+    title    = "Évolution historique de la discipline en Premier League",
+    subtitle = "Moyennes par match — saisons 1993-94 à 2021-22",
+    x        = "Saison",
+    y        = "Moyenne par match"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x     = element_text(angle = 45, hjust = 1, size = 8),
+    legend.position = "none",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+### Analyse des résultats
+On observe une **chute spectaculaire et continue des fautes** par match, passant d'environ **28 à moins de 21** en trente ans.
+En parallèle, le nombre de cartons reste **stable voire légèrement croissant**.
+L'hypothèse est validée. Le jeu s'est considérablement fluidifié, mais la tolérance arbitrale a diminué — les fautes moins nombreuses sont désormais sanctionnées plus sévèrement.
+
+### Critique et limites
+Les données des premières saisons (1993–1995) souffrent parfois de **lacunes dans le dataset**, ce qui peut créer un biais sur le point de départ des courbes.
+
+
+# Application Shiny
+
+## Objectif
+
+Afin de compléter les analyses statiques réalisées avec ggplot2, nous avons développé une application Shiny interactive permettant d'explorer les données de Premier League de manière dynamique.
+
+L'utilisateur peut filtrer les données selon la saison ou l'équipe étudiée et visualiser instantanément les résultats obtenus.
+
+## Interface générale
+
+```{r shiny-interface, echo=FALSE, out.width="90%"}
+knitr::include_graphics("shiny/shiny_interface.png")
+```
+
+L'application est organisée autour de trois visualisations interactives accessibles depuis un menu latéral. Plusieurs filtres permettent de personnaliser l'analyse selon les besoins de l'utilisateur.
+
+## Visualisation 1 : Évolution du nombre moyen de buts par saison
+
+```{r shiny-buts, echo=FALSE, out.width="90%"}
+knitr::include_graphics("shiny/shiny_buts.png")
+```
+
+Cette visualisation permet d'observer l'évolution du nombre moyen de buts marqués par match au fil des saisons. Les filtres offrent la possibilité de se concentrer sur une équipe spécifique ou sur l'ensemble du championnat.
+
+## Visualisation 2 : Équipes les plus sanctionnées
+
+```{r shiny-cartons, echo=FALSE, out.width="90%"}
+knitr::include_graphics("shiny/shiny_cartons.png")
+```
+
+Ce graphique interactif présente les équipes recevant le plus de cartons en moyenne. L'utilisateur peut ajuster le nombre d'équipes affichées grâce à un curseur dédié.
+
+## Visualisation 3 : Relation entre tirs et buts
+
+```{r shiny-tirs, echo=FALSE, out.width="90%"}
+knitr::include_graphics("shiny/shiny_tirs.png")
+```
+
+Cette visualisation met en évidence la relation entre le nombre total de tirs réalisés lors d'un match et le nombre total de buts inscrits. Les filtres permettent d'explorer différents contextes de jeu.
+
+## Apport de l'interactivité
+
+L'application Shiny apporte une dimension interactive aux analyses présentées dans ce rapport. Elle permet à l'utilisateur d'explorer librement les données, de filtrer les observations et d'obtenir une vision plus détaillée des phénomènes observés.
