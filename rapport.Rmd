@@ -147,10 +147,13 @@ Cette comparaison montre que les deux outils conduisent à la même conclusion :
 
 ### Hypothèse
 
-Nous cherchons à comprendre comment se distribue le nombre total de buts marqués par match en Premier League.  
+Nous cherchons à comprendre comment se distribue le nombre total de buts marqués par match en Premier League.
 On peut supposer que la majorité des matchs comportent un nombre modéré de buts, avec peu de rencontres très riches en buts.
+Cette hypothèse repose sur le fait que le football est un sport où les buts restent relativement rares. Les équipes disposent d’un temps limité pour créer des occasions et les dispositifs défensifs réduisent souvent le nombre de buts marqués. Il est donc logique de s’attendre à une concentration des matchs autour de faibles ou moyennes valeurs de buts.
 
 ### Choix de la visualisation
+
+Nous utilisons un histogramme car nous cherchons à étudier la distribution du nombre de buts par match. Cette visualisation est adaptée à une variable quantitative et permet d'observer rapidement les valeurs les plus fréquentes ainsi que la forme générale de la distribution. Comme vu en cours, l'histogramme est la représentation de référence pour analyser la répartition d'une variable numérique.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Histogramme
@@ -180,7 +183,7 @@ On observe une diminution progressive du nombre de matchs lorsque le nombre tota
 
 La distribution est asymétrique à droite, avec quelques valeurs élevées mais peu fréquentes.
 
-Ainsi, le graphique confirme notre hypothèse initiale : les matchs de Premier League présentent généralement un nombre modéré de buts.
+Ainsi, le graphique est cohérent avec notre hypothèse initiale : les matchs de Premier League présentent généralement un nombre modéré de buts.
 
 ### Interprétation et limites
 
@@ -219,6 +222,8 @@ top_teams <- full_join(home_goals, away_goals, by = "Team") %>%
   mutate(GrandTotal = TotalHomeGoals + TotalAwayGoals) %>%
   slice_max(GrandTotal, n = 15)
 ```
+Ce choix est également cohérent avec les principes de sémiologie graphique vus en cours. Les équipes constituent une variable catégorielle tandis que le nombre de buts est une variable quantitative. Le diagramme en barres est particulièrement adapté à cette situation car il utilise la longueur comme canal visuel principal, ce qui permet une comparaison précise des valeurs entre catégories.
+
 On se limite au top 15 pour une meilleure lisibilité.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -400,6 +405,9 @@ Nous utilisons une heatmap pour croiser le résultat à la mi-temps et le résul
 
 La heatmap est adaptée, car elle permet de visualiser rapidement les combinaisons les plus fréquentes entre ces deux variables. L’encodage par l’intensité de la couleur facilite l’identification des situations dominantes, tandis que les pourcentages affichés dans les cases permettent une lecture plus précise des résultats.
 
+Une table de contingence aurait également permis de représenter ces données. Cependant, la heatmap facilite davantage la lecture des tendances globales grâce à l'utilisation de l'intensité des couleurs. Comme vu en cours, ce type de représentation est particulièrement adapté pour visualiser les relations entre deux variables catégorielles et repérer rapidement les associations les plus fréquentes.
+
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 mi_temps_final <- epl %>%
   filter(!is.na(HTR), !is.na(FTR)) %>%
@@ -580,6 +588,8 @@ Nous comparons deux relations : d’une part, le nombre total de tirs et le nomb
 
 Chaque point représente un match. Une droite de tendance est ajoutée pour visualiser la relation générale. Cela permet de voir si les tirs cadrés semblent mieux associés aux buts que les tirs totaux.
 
+Les variables étudiées sont discrètes, notamment le nombre de buts qui ne prend que des valeurs entières. Cela provoque une superposition de certains points. Pour améliorer la lisibilité, un léger décalage (jitter) a été appliqué afin de mieux distinguer les observations.
+
 ```{r q9-tirs-cadres-buts, echo=FALSE, message=FALSE, warning=FALSE, fig.width=9, fig.height=5, fig.align='center', out.width='95%'}
 epl_q9 <- epl %>%
   filter(
@@ -647,6 +657,8 @@ Cependant, cette visualisation ne mesure pas précisément la qualité des occas
 
 Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe ou d’utiliser des indicateurs plus précis comme la position du tir ou les expected goals.
 
+Une limite de ce graphique est que plusieurs matchs peuvent avoir exactement les mêmes valeurs de tirs et de buts. Les points se superposent donc parfois, même avec le léger décalage appliqué. D'autres représentations pourraient permettre de mieux visualiser la concentration des observations.
+
 
 
 ## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
@@ -706,13 +718,15 @@ ggplot(epl_q13, aes(x = TotalGoals, y = GoalDiff)) +
 
 Le graphique montre que les matchs avec peu de buts présentent souvent un écart au score limité. Cela correspond notamment aux scores serrés comme 0-0, 1-0 ou 1-1.
 
-Lorsque le nombre total de buts augmente, l’écart au score peut aussi augmenter. Cela montre que les matchs les plus ouverts ne sont pas toujours les plus imprévisibles : certains sont spectaculaires mais restent déséquilibrés.
+Lorsque le nombre total de buts augmente, l'écart au score tend également à augmenter légèrement. Les matchs les plus offensifs ne sont donc pas systématiquement les plus serrés : certains sont spectaculaires mais restent déséquilibrés.
 
 ### Critiques et limites
 
 Cette analyse mesure l’équilibre d’un match uniquement avec l’écart final au score. Elle ne permet pas de savoir si le match a réellement été disputé pendant toute sa durée.
 
 De plus, un score final serré ne signifie pas forcément que les deux équipes ont eu le même niveau de domination. Des variables comme les tirs, les tirs cadrés ou la possession permettraient de compléter l’analyse.
+
+L'imprévisibilité d'un match est ici approximée par l'écart final au score. Cet indicateur permet de mesurer le niveau d'équilibre du résultat, mais il ne reflète pas parfaitement l'incertitude réelle du match. Un match peut rester indécis jusqu'aux dernières minutes tout en se terminant avec un écart relativement important, ou inversement.
 
 ## 14. Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ?
 
