@@ -248,6 +248,7 @@ Le graphique confirme la domination des clubs du "*Big Six*". Manchester United,
 
 On observe un écrat marqué entre ces leaders historiques et le reste des équipes : seules les équipes de ce haut de tableau ont inscrits un nombre de buts suprieur à 1500 buts sur la période. Cette visualisation met en évidence une hiérarchie offensive très stable sur le long terme dans le championnat anglais.
 
+
 ### Interprétation et limites
 Bien que ce graphique offre une vision globale efficace, il comporte certains biais qu'il est nécessaire de souligner :
 
@@ -1184,6 +1185,19 @@ On observe que cette moyenne reste globalement assez stable, généralement auto
 Cependant, certaines fluctuations apparaissent selon les saisons. On remarque par exemple une baisse autour des saisons 2005-2008, puis une remontée progressive après 2010. Ces variations montrent que le nombre moyen de buts n’est pas parfaitement constant d’une saison à l’autre.
 
 Dans les saisons les plus récentes, la moyenne semble légèrement plus élevée qu’au milieu des années 2000. Cela suggère une tendance modérée à l’augmentation du nombre de buts, même si cette évolution reste limitée.
+
+### Comparaison avec Power BI
+
+En complément du graphique réalisé avec R, nous avons également reproduit cette visualisation dans Power BI. L’objectif est de comparer les résultats obtenus avec deux outils différents et de vérifier leur cohérence.
+
+```{r, echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("PowerBI/question20.png")
+```
+
+Le graphique Power BI montre également l’évolution du nombre moyen de buts par match depuis la saison 2000-01. Les résultats sont cohérents avec ceux obtenus sous R : on observe des fluctuations selon les saisons, mais pas de tendance strictement croissante ou décroissante.
+
+Power BI permet une lecture plus interactive, notamment grâce aux filtres par saison et à la possibilité de modifier rapidement la période étudiée. Le graphique réalisé avec R est quant à lui directement intégré au rapport et reproductible à partir du code.
+
 
 ### Interprétation et limites
 
