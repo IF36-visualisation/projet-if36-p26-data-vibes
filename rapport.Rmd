@@ -252,10 +252,10 @@ On observe un écrat marqué entre ces leaders historiques et le reste des équi
 ### Interprétation et limites
 Bien que ce graphique offre une vision globale efficace, il comporte certains biais qu'il est nécessaire de souligner :
 
-* **Biais de longévité** : en utilisant le cumul historique des buts, nous favorisons les équipes n'ayant jamais été reléguées; une équipe très offensive présente seulement 2 ou 3 saisons en Premier League paraîtra moins "prolifique" qu'une équipe moyenne présente depuis 30 ans.
-* **Normalisation (Lie Factor)** : pour une analyse plus "honnête" statistiquement, il serait pertinent de comparer ces données avec la moyenne de buts par match. Cela permettrait de minimiser l'effet du temps et d'identifier les équipes réellement qui sont à craindre devant le but.
-* **Respect du Data-to-Ink ratio** : nous avons choisi un diagramme à barres horizontales pour garantir la lisibilité des noms de clubs; l'utilisation d'une couleur unique *vert foncé* sans gradients pour ne pas distraire l'œil des valeurs réelles
-* **Absence de dynamique temporelle** : le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
+* En utilisant le cumul historique des buts, nous favorisons les équipes n'ayant jamais été reléguées; une équipe très offensive présente seulement 2 ou 3 saisons en Premier League paraîtra moins "prolifique" qu'une équipe moyenne présente depuis 30 ans constituant un biais.
+* Pour une analyse plus "honnête" statistiquement, il serait pertinent de comparer ces données avec la moyenne de buts par match. Cela permettrait de minimiser l'effet du temps et d'identifier les équipes réellement qui sont à craindre devant le but.
+* Nous avons choisi un diagramme à barres horizontales pour garantir la lisibilité des noms de clubs; l'utilisation d'une couleur unique *vert foncé* sans gradients pour ne pas distraire l'œil des valeurs réelles
+* Le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
 
 
 ## 5. Les matchs sont-ils souvent décidés en seconde mi-temps ?
@@ -660,7 +660,99 @@ Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe 
 
 Une limite de ce graphique est que plusieurs matchs peuvent avoir exactement les mêmes valeurs de tirs et de buts. Les points se superposent donc parfois, même avec le léger décalage appliqué. D'autres représentations pourraient permettre de mieux visualiser la concentration des observations.
 
+## Question 11 — La quantité de tirs garantit-elle la victoire ?
 
+### Hypothèse
+Les équipes victorieuses à domicile affichent un différentiel de tirs (`ShotDiff`) largement positif, tandis que les équipes battues à domicile affichent un différentiel négatif.
+Le volume de tirs serait ainsi le premier indicateur de la victoire.
+
+### Choix de visualisation
+
+Un **Density Ridge Plot** (graphique de densité de crêtes) représente la distribution *continue* du
+différentiel de tirs (`ShotDiff = HS − AS`) pour chacune des trois issues finales du match.
+
+| Code `FTR` | Signification             |
+|:----------:|:--------------------------|
+| `H`        | Victoire à domicile       |
+| `D`        | Match nul                 |
+| `A`        | Victoire à l'extérieur    |
+
+Ce choix est préféré au boxplot classique pour deux raisons :
+
+- La forme de la courbe révèle la concentration réelle des matchs
+  (bimodalité, queues longues) là où le boxplot ne synthétise que cinq quantiles.
+- Les vagues superposées rendent les décalages entre groupes immédiatement perceptibles, sans nécessiter de lecture des médianes chiffrées donc améliore la lisibilité.
+
+```{r q11-ridge-shot-diff, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(epl, aes(x = ShotDiff, y = FTR, fill = FTR)) +
+  geom_density_ridges(
+    alpha         = 0.7,
+    scale         = 1.2,
+    rel_min_height = 0.01
+  ) +
+  scale_fill_manual(
+    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
+  ) +
+  labs(
+    title    = "Densité du différentiel de tirs selon le résultat final",
+    subtitle = "Chaque crête représente la concentration des matchs (HS − AS)",
+    x        = "Différentiel de tirs (Domicile − Extérieur)",
+    y        = "Résultat final"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold")
+  )
+```
+
+### Analyse des résultats
+Le pic de la crête verte (`H`) se situe nettement **au-delà de zéro (≈ +5)**, tandis que la crête rouge (`A`) est centrée sur des valeurs **négatives (≈ −3)**. La crête grise (`D`) se concentre autour de **zéro**, confirmant l'équilibre aux tirs lors des matchs nuls.
+
+Le volume de tirs est un indicateur fort du résultat. Toutefois, l'**étalement** des crêtes — en particulier celle des victoires à domicile — révèle qu'un différentiel positif reste une condition favorable, non suffisante.
+
+### Critique et limites
+Le `ShotDiff` ne tient pas compte du **bloc défensif** : une équipe qui mène peut volontairement
+reculer et contrer, affichant un différentiel négatif tout en maîtrisant le match.
+
+## Question 12 — Quelle est la fréquence des hold-ups ?
+Un *hold-up* désigne une équipe qui remporte le match en ayant tenté **moins de tirs** que son adversaire.
+
+### Hypothèse
+Les hold-ups sont des anomalies statistiques rares, représentant **moins de 15 %** des rencontres.
+
+### Choix de visualisation
+Un **nuage de points** croise les tirs à domicile et à l'extérieur, coloré par résultat. La diagonale $x = y$ sépare visuellement la domination théorique aux tirs.
+
+```{r q12-scatter-holdup, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(epl, aes(x = HS, y = AS, color = FTR)) +
+  geom_point(alpha = 0.4, size = 1.5) +
+  geom_abline(
+    intercept = 0, slope = 1,
+    linetype = "dashed", color = "black", linewidth = 1
+  ) +
+  scale_color_manual(
+    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
+  ) +
+  labs(
+    title    = "Confrontation des tirs et détection des hold-ups",
+    subtitle = "La ligne pointillée sépare la domination territoriale aux tirs",
+    x        = "Nombre de tirs — équipe à domicile (HS)",
+    y        = "Nombre de tirs — équipe à l'extérieur (AS)",
+    color    = "Résultat"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+### Analyse des résultats
+- Les `A` situés **sous** la diagonale (domicile tire plus mais perd) = hold-ups subis.
+- Les `H` situés **au-dessus** de la diagonale (extérieur tire plus mais perd) = hold-ups réalisés.
+La densité de ces points "inversés" est loin d'être négligeable. Le football, sport à faible score, résiste régulièrement à la domination statistique globale.
+
+### Critique et limites
+Le graphique **sature** en raison du grand nombre d'observations. Par ailleurs, compter les tirs totaux masque la **dangerosité réelle** des actions — les *Expected Goals* (xG) ou les tirs cadrés
+offriraient un filtre nettement plus pertinent.
 
 ## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
 
@@ -832,6 +924,50 @@ Le ratio buts/tirs donne une indication simple de l’efficacité offensive, mai
 De plus, cette analyse sélectionne les cinq équipes ayant marqué le plus de buts. Elle ne permet donc pas de comparer toutes les équipes du championnat, notamment celles qui tirent peu mais peuvent être très efficaces.
 
 Enfin, les données sont agrégées sur plusieurs saisons. Les effectifs, les entraîneurs et les styles de jeu des équipes ont pu évoluer au fil du temps, ce qui limite l’interprétation directe des différences observées.
+
+## Question 15 — L'agressivité (fautes) pénalise-t-elle le résultat final ?
+
+### Hypothèse
+Commettre plus de fautes que l'adversaire traduit une frustration ou une perte de contrôle du jeu,
+et est donc corrélé à un résultat négatif (défaite).
+
+### Choix de visualisation
+Un **boxplot jumelé** compare la distribution des fautes commises à domicile (`HF`) et à l'extérieur (`AF`) selon l'issue du match.
+
+```{r q15-boxplot-fouls, echo=FALSE, message=FALSE, warning=FALSE}
+epl %>%
+  select(FTR, HF, AF) %>%
+  pivot_longer(
+    cols      = c(HF, AF),
+    names_to  = "Lieu",
+    values_to = "Fautes"
+  ) %>%
+  ggplot(aes(x = FTR, y = Fautes, fill = Lieu)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.2) +
+  scale_fill_manual(
+    values = c("HF" = "#34495e", "AF" = "#f1c40f"),
+    labels = c("HF" = "Domicile", "AF" = "Extérieur")
+  ) +
+  labs(
+    title = "Impact du nombre de fautes sur l'issue du match",
+    x     = "Résultat du match",
+    y     = "Nombre de fautes commises",
+    fill  = "Équipe"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold"))
+```
+
+### Analyse des résultats
+
+Les distributions restent **quasi-identiques** quelle que soit l'issue du match
+(médiane stable autour de 11–13 fautes).
+Le nombre brut de fautes n'a **aucun pouvoir prédictif** direct sur le résultat. Un jeu haché ou agressif fait partie intégrante de certaines stratégies sans pour autant pénaliser le score final.
+
+### Critique et limites
+Toutes les fautes n'ont pas la même valeur :
+une faute tactique au milieu de terrain pour casser une contre-attaque est **bénéfique**, tandis qu'une faute dans la surface entraînant un penalty est **pénalisante**.
+Le dataset ne qualifie pas la **nature** de la faute.
 
 ## 16. Existe-t-il une relation entre fautes et cartons ?
 
@@ -1206,145 +1342,6 @@ Ces résultats indiquent que le nombre de buts par match en Premier League reste
 Il faut cependant rester prudent dans l’interprétation. Le graphique permet d’observer une évolution du nombre de buts, mais il ne permet pas d’expliquer directement les causes de ces variations. Celles-ci peuvent être liées à de nombreux facteurs, comme les styles de jeu, le niveau des équipes, les changements tactiques ou encore l’évolution du championnat.
 
 Ainsi, on peut parler d’une légère tendance à la hausse dans les saisons récentes, mais il serait nécessaire d’analyser d’autres variables pour confirmer l’idée d’un championnat plus offensif ou plus spectaculaire.
-
----
-## Question 11 — La quantité de tirs garantit-elle la victoire ?
-
-### Hypothèse
-Les équipes victorieuses à domicile affichent un différentiel de tirs (`ShotDiff`) largement positif, tandis que les équipes battues à domicile affichent un différentiel négatif.
-Le volume de tirs serait ainsi le premier indicateur de la victoire.
-
-### Choix de visualisation
-
-Un **Density Ridge Plot** (graphique de densité de crêtes) représente la distribution *continue* du
-différentiel de tirs (`ShotDiff = HS − AS`) pour chacune des trois issues finales du match.
-
-| Code `FTR` | Signification             |
-|:----------:|:--------------------------|
-| `H`        | Victoire à domicile       |
-| `D`        | Match nul                 |
-| `A`        | Victoire à l'extérieur    |
-
-Ce choix est préféré au boxplot classique pour deux raisons :
-
-- **Richesse de l'information** : la forme de la courbe révèle la concentration réelle des matchs
-  (bimodalité, queues longues) là où le boxplot ne synthétise que cinq quantiles.
-- **Lisibilité** : les vagues superposées rendent les décalages entre groupes immédiatement perceptibles, sans nécessiter de lecture des médianes chiffrées.
-
-```{r q11-ridge-shot-diff, echo=FALSE, message=FALSE, warning=FALSE}
-ggplot(epl, aes(x = ShotDiff, y = FTR, fill = FTR)) +
-  geom_density_ridges(
-    alpha         = 0.7,
-    scale         = 1.2,
-    rel_min_height = 0.01
-  ) +
-  scale_fill_manual(
-    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
-  ) +
-  labs(
-    title    = "Densité du différentiel de tirs selon le résultat final",
-    subtitle = "Chaque crête représente la concentration des matchs (HS − AS)",
-    x        = "Différentiel de tirs (Domicile − Extérieur)",
-    y        = "Résultat final"
-  ) +
-  theme_minimal() +
-  theme(
-    legend.position = "none",
-    plot.title      = element_text(face = "bold")
-  )
-```
-
-### Analyse des résultats
-Le pic de la crête verte (`H`) se situe nettement **au-delà de zéro (≈ +5)**, tandis que la crête rouge (`A`) est centrée sur des valeurs **négatives (≈ −3)**. La crête grise (`D`) se concentre autour de **zéro**, confirmant l'équilibre aux tirs lors des matchs nuls.
-
-Le volume de tirs est un indicateur fort du résultat. Toutefois, l'**étalement** des crêtes — en particulier celle des victoires à domicile — révèle qu'un différentiel positif reste une condition favorable, non suffisante.
-
-### Critique et limites
-Le `ShotDiff` ne tient pas compte du **bloc défensif** : une équipe qui mène peut volontairement
-reculer et contrer, affichant un différentiel négatif tout en maîtrisant le match.
-
-## Question 12 — Quelle est la fréquence des hold-ups ?
-Un *hold-up* désigne une équipe qui remporte le match en ayant tenté **moins de tirs** que son adversaire.
-
-### Hypothèse
-Les hold-ups sont des anomalies statistiques rares, représentant **moins de 15 %** des rencontres.
-
-### Choix de visualisation
-Un **nuage de points** croise les tirs à domicile et à l'extérieur, coloré par résultat. La diagonale $x = y$ sépare visuellement la domination théorique aux tirs.
-
-```{r q12-scatter-holdup, echo=FALSE, message=FALSE, warning=FALSE}
-ggplot(epl, aes(x = HS, y = AS, color = FTR)) +
-  geom_point(alpha = 0.4, size = 1.5) +
-  geom_abline(
-    intercept = 0, slope = 1,
-    linetype = "dashed", color = "black", linewidth = 1
-  ) +
-  scale_color_manual(
-    values = c("H" = "#2ecc71", "D" = "#95a5a6", "A" = "#e74c3c")
-  ) +
-  labs(
-    title    = "Confrontation des tirs et détection des hold-ups",
-    subtitle = "La ligne pointillée sépare la domination territoriale aux tirs",
-    x        = "Nombre de tirs — équipe à domicile (HS)",
-    y        = "Nombre de tirs — équipe à l'extérieur (AS)",
-    color    = "Résultat"
-  ) +
-  theme_minimal() +
-  theme(plot.title = element_text(face = "bold"))
-```
-
-### Analyse des résultats
-- Les **points rouges** (`A`) situés **sous** la diagonale (domicile tire plus mais perd) = hold-ups subis.
-- Les **points verts** (`H`) situés **au-dessus** de la diagonale (extérieur tire plus mais perd) = hold-ups réalisés.
-La densité de ces points "inversés" est loin d'être négligeable. Le football, sport à faible score, résiste régulièrement à la domination statistique globale.
-
-### Critique et limites
-Le graphique **sature** en raison du grand nombre d'observations. Par ailleurs, compter les tirs totaux masque la **dangerosité réelle** des actions — les *Expected Goals* (xG) ou les tirs cadrés
-offriraient un filtre nettement plus pertinent.
-
-## Question 15 — L'agressivité (fautes) pénalise-t-elle le résultat final ?
-
-### Hypothèse
-Commettre plus de fautes que l'adversaire traduit une frustration ou une perte de contrôle du jeu,
-et est donc corrélé à un résultat négatif (défaite).
-
-### Choix de visualisation
-Un **boxplot jumelé** compare la distribution des fautes commises à domicile (`HF`) et à l'extérieur (`AF`) selon l'issue du match.
-
-```{r q15-boxplot-fouls, echo=FALSE, message=FALSE, warning=FALSE}
-epl %>%
-  select(FTR, HF, AF) %>%
-  pivot_longer(
-    cols      = c(HF, AF),
-    names_to  = "Lieu",
-    values_to = "Fautes"
-  ) %>%
-  ggplot(aes(x = FTR, y = Fautes, fill = Lieu)) +
-  geom_boxplot(alpha = 0.7, outlier.alpha = 0.2) +
-  scale_fill_manual(
-    values = c("HF" = "#34495e", "AF" = "#f1c40f"),
-    labels = c("HF" = "Domicile", "AF" = "Extérieur")
-  ) +
-  labs(
-    title = "Impact du nombre de fautes sur l'issue du match",
-    x     = "Résultat du match",
-    y     = "Nombre de fautes commises",
-    fill  = "Équipe"
-  ) +
-  theme_minimal() +
-  theme(plot.title = element_text(face = "bold"))
-```
-
-### Analyse des résultats
-
-Les distributions restent **quasi-identiques** quelle que soit l'issue du match
-(médiane stable autour de 11–13 fautes).
-Le nombre brut de fautes n'a **aucun pouvoir prédictif** direct sur le résultat. Un jeu haché ou agressif fait partie intégrante de certaines stratégies sans pour autant pénaliser le score final.
-
-### Critique et limites
-Toutes les fautes n'ont pas la même valeur :
-une faute tactique au milieu de terrain pour casser une contre-attaque est **bénéfique**, tandis qu'une faute dans la surface entraînant un penalty est **pénalisante**.
-Le dataset ne qualifie pas la **nature** de la faute.
 
 ## Question 22 — Le jeu de Premier League est-il devenu plus propre ou plus indiscipliné ?
 
