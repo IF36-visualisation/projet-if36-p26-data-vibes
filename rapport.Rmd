@@ -720,10 +720,8 @@ Le `ShotDiff` ne tient pas compte du **bloc défensif** : une équipe qui mène 
 reculer et contrer, affichant un différentiel négatif tout en maîtrisant le match.
 
 ## Question 12 — Quelle est la fréquence des hold-ups ?
-Nous supposons que les **hold-ups** sont rares car un volume de tirs réduit limite les occasions de marquer. Cependant, un contre-attaquant efficace peut compenser la quantité par la qualité; nous estimons que les hold-ups représentent entre **15 et 25 %** des rencontres.
-
 ### Hypothèse
-Les hold-ups sont des anomalies statistiques rares, représentant **moins de 15 %** des rencontres.
+Nous supposons que les **hold-ups** sont rares car un volume de tirs réduit limite les occasions de marquer. Cependant, un contre-attaquant efficace peut compenser la quantité par la qualité; nous estimons que les hold-ups représentent entre **15 et 25 %** des rencontres.
 
 ### Choix de visualisation
 Le nuage de points encode deux variables quantitatives continues (HS, AS) sur les canaux **position X et Y**; le plus précis selon Cleveland & McGill. La **couleur** (FTR) est un encodage pré-attentif catégoriel permettant de repérer les hold-ups sans lecture active. La diagonale $x = y$ est un repère sémiologique : elle matérialise la frontière entre domination domicile et domination extérieure, transformant un scatter plot en outil de détection d'anomalies. La transparence atténue la saturation visuelle liée aux 11 000 observations.
