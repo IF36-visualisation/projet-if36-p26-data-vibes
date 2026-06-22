@@ -1548,7 +1548,7 @@ Enfin, chaque membre du groupe retient un apprentissage spécifique de ce projet
 
 **HU Xinyu** : Ce projet m’a permis de mieux structurer une analyse exploratoire et de relier les visualisations à des interprétations claires. Il aurait été intéressant d’approfondir davantage la comparaison entre les visualisations produites avec R et Power BI, mais le temps disponible était limité.
 
-**NOUGWA KEMAJOU Tatiana** : 
+**NOUGWA KEMAJOU Tatiana** : À travers ce projet, j’ai appris à analyser un jeu de données en me posant différentes questions et en cherchant à comprendre ce que les données pouvaient révéler. J’ai également compris que le choix des graphiques est important pour bien présenter les résultats. Enfin, ce travail m’a permis de gagner en autonomie avec R et de réaliser qu’une bonne analyse ne consiste pas seulement à créer des visualisations, mais aussi à savoir interpréter les résultats et en tirer des conclusions pertinentes.
 
 # Annexe — Répartition du travail
 
