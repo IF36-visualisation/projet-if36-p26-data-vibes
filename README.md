@@ -126,11 +126,13 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 
 **Notre analyse suivra une progression en cinq axes. Nous commencerons par décrire la structure générale des résultats du championnat, puis nous étudierons la dynamique temporelle des matchs. Nous chercherons ensuite à comprendre dans quelle mesure la domination offensive et la discipline influencent l’issue d’une rencontre, avant de terminer par une vision plus globale des évolutions saisonnières et des corrélations entre variables.**
 
+Certaines questions apparaissent barrées dans le tableau. Elles correspondent aux formulations initiales que nous avons décidé de reformuler ou d’abandonner après discussion, afin de conserver une trace de l’évolution de notre réflexion.
+
 ### 1. Comprendre les résultats du championnat
 
 | # | Question | Variables | Visualisation | Objectif |
 |--:|----------|----------|--------------|---------|
-| 1 | Quelle est la répartition des résultats (domicile, nul, extérieur) ? | FTR | Bar chart | Comprendre la structure globale |
+| 1 | ~~Quelle est la répartition des résultats (domicile, nul, extérieur) ?~~<br> | FTR | Bar chart | Comprendre la structure globale |
 | 2 | Existe-t-il un avantage du terrain ? | FTR | Bar chart | Comparer domicile vs extérieur |
 | 3 | Quelle est la distribution du nombre de buts par match ? | TotalGoals (FTHG + FTAG) | Histogramme | Comprendre le profil des matchs |
 | 4 | Quelles équipes marquent le plus ? | HomeTeam, AwayTeam, TotalGoals (FTHG + FTAG) | Bar chart | Identifier les meilleures attaques |
@@ -175,8 +177,7 @@ Afin de structurer notre analyse de manière cohérente, nous avons organisé no
 |--:|----------|----------|--------------|---------|
 | 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
 | 21 | ~~Quelles variables sont les plus corrélées entre elles ?~~ | ~~Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards)~~ | ~~Heatmap~~ | ~~Vision globale des relations~~ |
-| 21 | Les équipes les plus offensives sont-elles aussi les plus efficaces ? | HomeTeam, AwayTeam, TotalShots (HS + AS), TotalGoals (FTHG + FTAG) | Scatter plot | Comparer volume offensif et efficacité offensive |
-| 22 | Le style de jeu général de la Premier League est-il devenu plus propre ou plus indiscipliné au fil des décennies ? | Season, TotalFouls, TotalCards | Multi-line chart / Facet | Analyser l'évolution de la discipline historique |
+| 21 | Le style de jeu général de la Premier League est-il devenu plus propre ou plus indiscipliné au fil des décennies ? | Season, TotalFouls, TotalCards | Multi-line chart / Facet | Analyser l'évolution de la discipline historique |
 
 
 **Modification du plan d'analyse :**
