@@ -1542,9 +1542,10 @@ Pour aller plus loin, il serait intéressant d’ajouter d’autres sources de d
 
 Enfin, chaque membre du groupe retient un apprentissage spécifique de ce projet :
 
-**DODZRO Darryl Junior Koffi** : 
+**DODZRO Darryl Junior Koffi** : Ce projet m’a permis de mieux comprendre l’analyse des dimensions offensives et disciplinaires dans un championnat de football. J’ai également appris à relier les indicateurs statistiques, comme les tirs, les fautes ou les cartons, à des interprétations concrètes du jeu. Il aurait été intéressant d’approfondir davantage l’impact des arbitres sur le déroulement des matchs, mais certaines données restent limitées.
 
-**FOTIO NGNINLAJUNG Francky** : 
+**FOTIO NGNINLAJUNG Francky** : Ce projet m’a permis de progresser dans la création d’une application Shiny interactive et dans l’intégration de filtres permettant d’explorer les données de manière dynamique. J’ai compris l’intérêt de compléter les visualisations statiques par un outil interactif. Il aurait été intéressant d’ajouter davantage de fonctionnalités à l’application, mais le temps disponible était limité.
+
 
 **HU Xinyu** : Ce projet m’a permis de mieux structurer une analyse exploratoire et de relier les visualisations à des interprétations claires. Il aurait été intéressant d’approfondir davantage la comparaison entre les visualisations produites avec R et Power BI, mais le temps disponible était limité.
 
