@@ -177,7 +177,7 @@ Certaines questions apparaissent barrées dans le tableau. Elles correspondent a
 |--:|----------|----------|--------------|---------|
 | 20 | Le nombre de buts évolue-t-il selon les saisons ? | Season, TotalGoals (FTHG + FTAG) | Line chart | Évolution du jeu |
 | 21 | ~~Quelles variables sont les plus corrélées entre elles ?~~ | ~~Variables numériques (incluant TotalGoals, TotalShots, ShotDiff, Cards)~~ | ~~Heatmap~~ | ~~Vision globale des relations~~ |
-| 21 | Le style de jeu général de la Premier League est-il devenu plus propre ou plus indiscipliné au fil des décennies ? | Season, TotalFouls, TotalCards | Multi-line chart / Facet | Analyser l'évolution de la discipline historique |
+| 22 | Le style de jeu général de la Premier League est-il devenu plus propre ou plus indiscipliné au fil des décennies ? | Season, TotalFouls, TotalCards | Multi-line chart / Facet | Analyser l'évolution de la discipline historique |
 
 
 **Modification du plan d'analyse :**
