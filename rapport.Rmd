@@ -1,8 +1,7 @@
 ---
-title: "Rapport"
-author: DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU
-  Tatiana
-date: "2026-04-20"
+title: "Analyse exploratoire et visualisation des résultats de Premier League"
+author: "DODZRO Darryl Junior Koffi, FOTIO NGNINLAJUNG Francky, HU Xinyu, NOUGWA KEMAJOU Tatiana"
+date: "2026-06-20"
 output:
   html_document: 
     toc: true
@@ -10,8 +9,62 @@ output:
     toc_depth: 3
     theme: flatly
   pdf_document: default
+  
 
 ---
+
+<style>
+#TOC {
+  font-size: 15px;
+}
+
+#TOC .tocify-header > li > a,
+#TOC .tocify-header > li > .tocify-item {
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  color: #1f2d3d !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+#TOC .tocify-subheader > li > a,
+#TOC .tocify-subheader > li > .tocify-item {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #2f4858 !important;
+  padding-left: 22px !important;
+  border-left: 4px solid #8aa4b8;
+  margin-left: 6px;
+}
+
+#TOC .tocify-subheader .tocify-subheader > li > a,
+#TOC .tocify-subheader .tocify-subheader > li > .tocify-item {
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  color: #5a6470 !important;
+  padding-left: 42px !important;
+  border-left: none;
+  line-height: 1.35;
+}
+
+#TOC .tocify-item.active,
+#TOC .tocify-focus {
+  background-color: #2f4858 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 4px;
+}
+
+#TOC .tocify-subheader .tocify-subheader .tocify-item.active,
+#TOC .tocify-subheader .tocify-subheader .tocify-focus {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+}
+
+#TOC li {
+  margin-bottom: 4px;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -42,6 +95,10 @@ epl <- read_csv(here("data", "results.csv")) %>%
 ```
 # Introduction
 
+La Premier League est l’un des championnats de football les plus suivis au monde. À travers ce projet, nous cherchons à comprendre quels facteurs peuvent être associés aux résultats des matchs : l’avantage du terrain, la dynamique du score, l’efficacité offensive, la discipline ou encore l’évolution du jeu au fil des saisons.
+
+L’objectif de ce rapport est donc de construire une analyse exploratoire progressive à partir de visualisations de données. Chaque question est accompagnée d’un graphique, d’une interprétation et d’une discussion sur les limites des résultats obtenus.
+
 ## 1. Données
 
 Le jeu de données étudié porte sur les matchs de Premier League anglaise et couvre plusieurs saisons (de 1993 à 2022). Il est fourni au format **CSV** et contient **11 113 observations** (matchs) et **23 variables**.
@@ -57,26 +114,30 @@ Le dataset est structuré de manière à permettre une analyse comparative entre
 
 ## 2. Plan d'analyse
 
-Notre démarche d'analyse suit le cycle **Aquire > Filter > Mine > Refine** afin de transformer les données brutes en informations exploitables :
+Notre démarche d'analyse suit le cycle **Acquire > Filter > Mine > Refine** afin de transformer les données brutes en informations exploitables :
 
-1.  **Aquire & Filter (Traitement avec dplyr)** : Nettoyage des données, gestion des valeurs manquantes (`NA`) et création de variables calculées (comme le total de buts ou le cumul des cartons) pour garantir la fiabilité des analyses.
-2.  **Mine (Exploration statique avec ggplot2)** : Répondre à des questions ciblées pour valider nos premières hypothèses. Nous prévoyons d'explorer :
+1. **Acquire & Filter (Traitement avec dplyr)** : Nettoyage des données, gestion des valeurs manquantes (`NA`) et création de variables calculées (comme le total de buts ou le cumul des cartons) pour garantir la fiabilité des analyses.
+
+2. **Mine (Exploration statique avec ggplot2)** : Répondre à des questions ciblées pour valider nos hypothèses. Nous avons exploré plusieurs axes :
     * **La performance** : Existe-t-il un avantage réel à jouer à domicile ? Quelles sont les équipes les plus prolifiques ?
-    * **La discipline** : Existe-t-il une corrélation entre les fautes et les cartons ? Les arbitres influencent-ils la sévérité du jeu ?
+    * **La discipline** : Existe-t-il une relation entre les fautes et les cartons ? Les arbitres influencent-ils la sévérité du jeu ?
     * **La prédiction** : Le score à la mi-temps permet-il d'anticiper avec fiabilité le résultat final ?
-3.  **Refine (Interactivité avec Shiny)** : Transformer ces visualisations en outils interactifs pour permettre à l'utilisateur de filtrer les résultats par saison ou par équipe, offrant ainsi une vision plus granulaire des données.
 
-Nous porterons une attention particulière au **Data-to-Ink ratio** et au **Lie Factor** (concepts vus en cours) pour garantir que nos graphiques sont à la fois lisibles et honnêtes.
+3. **Refine (Interactivité avec Shiny)** : Transformer ces visualisations en outils interactifs pour permettre à l'utilisateur de filtrer les résultats par saison ou par équipe, offrant ainsi une vision plus granulaire des données.
 
----
+Nous portons une attention particulière au **Data-to-Ink ratio** et au **Lie Factor** (concepts vus en cours) afin de garantir que nos graphiques soient à la fois lisibles et honnêtes.
 
-## 2. Existe-t-il un avantage du terrain ?
+# Analyse exploratoire
 
-### Hypothèse
+## 1. Comprendre les résultats du championnat
+
+### Question 1 — Existe-t-il un avantage du terrain ?
+
+#### Hypothèse
 
 Nous supposons que les équipes jouant à domicile obtiennent une proportion de victoires plus élevée que les équipes jouant à l’extérieur. Cette hypothèse repose sur l’idée que le fait de jouer à domicile peut constituer un avantage : les équipes bénéficient du soutien de leurs supporters, connaissent mieux leur stade et peuvent être moins affectées par les déplacements.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un diagramme en barres pour comparer les proportions de victoires à domicile, de matchs nuls et de victoires à l’extérieur.
 
@@ -115,13 +176,13 @@ ggplot(home_adv, aes(x = Resultat, y = proportion)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre que les victoires à domicile représentent la catégorie la plus fréquente parmi les résultats des matchs. Les victoires à l’extérieur sont moins nombreuses, tandis que les matchs nuls occupent une position intermédiaire.
 
 Cette différence indique que les résultats ne sont pas parfaitement équilibrés entre domicile et extérieur. La visualisation permet donc d’identifier rapidement une tendance générale : les équipes semblent gagner plus souvent lorsqu’elles jouent à domicile.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Ces résultats confirment notre hypothèse de départ : il existe un avantage du terrain en Premier League sur la période étudiée. Cet avantage peut être interprété comme le résultat de plusieurs facteurs possibles, notamment le soutien du public, la familiarité avec le stade et l’absence de déplacement pour l’équipe à domicile.
 
@@ -129,7 +190,7 @@ Cependant, cette analyse reste globale. Elle montre une tendance générale, mai
 
 Pour approfondir cette question, il serait utile d’analyser si l’avantage du terrain varie selon les saisons, selon les équipes ou selon le niveau relatif des adversaires.
 
-### Comparaison avec Power BI
+#### Comparaison avec Power BI
 
 Nous avons également reproduit cette visualisation avec Power BI.
 
@@ -143,15 +204,15 @@ La différence principale ne vient pas du résultat obtenu, mais de la manière 
 
 Cette comparaison montre que les deux outils conduisent à la même conclusion : il existe un avantage du terrain en Premier League. R est plus adapté pour une analyse reproductible et personnalisée, tandis que Power BI est plus pratique pour explorer visuellement les données et tester rapidement différentes représentations.
 
-## 3. Quelle est la distribution du nombre de buts par match ?
+### Question 2 — Quelle est la distribution du nombre de buts par match ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous cherchons à comprendre comment se distribue le nombre total de buts marqués par match en Premier League.
 On peut supposer que la majorité des matchs comportent un nombre modéré de buts, avec peu de rencontres très riches en buts.
 Cette hypothèse repose sur le fait que le football est un sport où les buts restent relativement rares. Les équipes disposent d’un temps limité pour créer des occasions et les dispositifs défensifs réduisent souvent le nombre de buts marqués. Il est donc logique de s’attendre à une concentration des matchs autour de faibles ou moyennes valeurs de buts.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un histogramme car nous cherchons à étudier la distribution du nombre de buts par match. Cette visualisation est adaptée à une variable quantitative et permet d'observer rapidement les valeurs les plus fréquentes ainsi que la forme générale de la distribution. Comme vu en cours, l'histogramme est la représentation de référence pour analyser la répartition d'une variable numérique.
 
@@ -175,7 +236,7 @@ ggplot(epl, aes(x = TotalGoals)) +
 
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 L'histogramme montre que la majorité des matchs se concentrent entre 1 et 3 buts.
 
@@ -185,19 +246,19 @@ La distribution est asymétrique à droite, avec quelques valeurs élevées mais
 
 Ainsi, le graphique est cohérent avec notre hypothèse initiale : les matchs de Premier League présentent généralement un nombre modéré de buts.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Cette analyse permet de décrire la distribution générale du nombre de buts par match. Cependant, elle ne permet pas d’expliquer pourquoi certains matchs sont plus riches en buts que d’autres.
 
 Pour aller plus loin, il serait utile de croiser le nombre de buts avec d’autres variables, comme les équipes, les saisons ou le nombre de tirs.
 
-## 4. Quelles équipes marquent le plus de buts ?
+### Question 3 — Quelles équipes marquent le plus de buts ?
 
-### Hypothèse
+#### Hypothèse
 Nous supposons que les équipes du "Big Six" : *Arsenal, Chelsea, Liverpool, Manchester City, Manchester United, Tottenham Hotspur* dominent ce classement. Ces clubs n'ont jamais été relégués depuis 1993, ce qui leur confère un avantage mécanique de longévité : plus de matchs joués signifie plus d'occasions de marquer. 
 Leurs budgets élevés leur permettent également de recruter des attaquants prolifiques sur l'ensemble de la période.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 Pour comparer des catégories : noms des équipes en fonction d'une valeur numérique : total de buts, le diagramme en barres horizontales est la solution la plus adaptée pour les raisons suivantes :
 
 * **Lisibilité** : compte tenu du grand nombre d'équipes en Premier League, les noms seraient illisibles ou se chevaucheraient sur un axe horizontal (X) alors que l'orientation horizontale permet une lecture naturelle des noms de gauche à droite.
@@ -247,12 +308,12 @@ ggplot(top_teams, aes(x = reorder(Team, GrandTotal), y = GrandTotal)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 Le graphique confirme la domination des clubs du "*Big Six*". Manchester United, Arsenal et Liverpool occupent les trois premières marches du podium.
 On observe un écrat marqué entre ces leaders historiques et le reste des équipes : seules les équipes de ce haut de tableau ont inscrits un nombre de buts suprieur à 1500 buts sur la période. Cette visualisation met en évidence une hiérarchie offensive très stable sur le long terme dans le championnat anglais.
 Ce résultat s'explique par le biais de longévité anticipé dans l'hypothèse : l'absence de relégation garantit un volume de matchs sans interruption. La visualisation confirme une hiérarchie offensive structurelle.
 
-### Interprétation et limites
+#### Interprétation et limites
 Bien que ce graphique offre une vision globale efficace, il comporte certains biais qu'il est nécessaire de souligner :
 
 * En utilisant le cumul historique des buts, nous favorisons les équipes n'ayant jamais été reléguées; une équipe très offensive présente seulement 2 ou 3 saisons en Premier League paraîtra moins "prolifique" qu'une équipe moyenne présente depuis 30 ans constituant un biais.
@@ -260,16 +321,17 @@ Bien que ce graphique offre une vision globale efficace, il comporte certains bi
 * Nous avons choisi un diagramme à barres horizontales pour garantir la lisibilité des noms de clubs; l'utilisation d'une couleur unique *vert foncé* sans gradients pour ne pas distraire l'œil des valeurs réelles
 * Le graphique fige une période de 30 ans en une seule barre mais ne permet pas de voir si une équipe est en déclin offensif ou en pleine ascension sur les dernières saisons.
 
+## 2. Dynamique des matchs
 
-## 5. Les matchs sont-ils souvent décidés en seconde mi-temps ?
+### Question 4 — Les matchs sont-ils souvent décidés en seconde mi-temps ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que la seconde mi-temps joue un rôle important dans l’issue des matchs. Après la pause, les équipes peuvent modifier leur stratégie, la fatigue apparaît et les changements de joueurs peuvent influencer le jeu.
 
 On peut donc s’attendre à observer une proportion importante de matchs dont le résultat évolue entre la mi-temps et la fin du match.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Pour répondre à cette question, nous comparons le résultat à la mi-temps (`HTR`) avec le résultat final (`FTR`).
 
@@ -317,13 +379,13 @@ epl_clean %>%
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre que la majorité des matchs conservent le même résultat entre la mi-temps et la fin du match. Environ 61 % des matchs ont un résultat inchangé, contre environ 39 % dont le résultat change en seconde mi-temps.
 
 Ces résultats indiquent que les matchs ne sont pas majoritairement décidés en seconde mi-temps. Cependant, la proportion de changements reste importante : près de quatre matchs sur dix connaissent une évolution du résultat après la pause.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 L’hypothèse de départ n’est donc que partiellement vérifiée. La première mi-temps semble déjà jouer un rôle important dans l’issue du match, car plus de la moitié des matchs gardent le même résultat jusqu’à la fin.
 
@@ -331,13 +393,13 @@ Cependant, cette analyse reste limitée. Elle compare seulement le type de résu
 
 Cette visualisation permet donc d’étudier les changements d’issue du match, mais elle ne décrit pas toute la dynamique réelle de la seconde mi-temps.
 
-## 6. Quelle proportion de matchs connaît un retournement ?
+### Question 5 — Quelle proportion de matchs connaît un retournement ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que les retournements complets sont rares en Premier League. En effet, une équipe qui mène à la mi-temps possède souvent un avantage psychologique et tactique : elle peut mieux contrôler le rythme du match, tandis que l’équipe adverse doit prendre plus de risques pour revenir au score.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un graphique en anneau afin de représenter la part des matchs avec retournement complet dans l’ensemble des matchs. Cette question relève d’un objectif de répartition, car nous cherchons à visualiser la proportion d’un phénomène par rapport au total des rencontres.
 
@@ -385,25 +447,25 @@ ggplot(retournement_data, aes(x = 2, y = Pourcentage, fill = Retournement)) +
 ```
 
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le diagramme montre que les retournements complets représentent seulement 3,7 % des matchs étudiés, contre 96,3 % de matchs sans retournement complet. La majorité des rencontres ne connaît donc pas de renversement total entre la mi-temps et le résultat final.
 
 Ce résultat confirme notre hypothèse : mener à la mi-temps constitue généralement un avantage important pour l’issue du match. La visualisation permet ainsi de mettre en évidence le caractère minoritaire de ce phénomène.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Ces résultats suggèrent qu’une équipe en tête à la mi-temps conserve souvent une position favorable jusqu’à la fin du match. Cela peut s’expliquer par une meilleure maîtrise tactique, une gestion du score ou un avantage psychologique.
 
 Cependant, cette analyse reste globale. Elle ne prend pas en compte le moment exact des buts, les cartons rouges, les blessures, les changements tactiques ou le niveau relatif des équipes. De plus, les matchs passant d’un score nul à une victoire ne sont pas inclus dans notre définition du retournement complet.
 
-## 7. Le résultat à la mi-temps prédit-il le résultat final ?
+### Question 6 — Le résultat à la mi-temps prédit-il le résultat final ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que le résultat à la mi-temps est fortement lié au résultat final. Une équipe qui mène à la pause a plus de chances de gagner le match, car elle dispose déjà d’un avantage au score et peut adapter sa stratégie en seconde période pour conserver cet avantage.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons une heatmap pour croiser le résultat à la mi-temps et le résultat final. Cette question relève d’un objectif de relation entre deux variables catégorielles : HTR, qui indique le résultat à la mi-temps, et FTR, qui indique le résultat final.
 
@@ -459,19 +521,19 @@ ggplot(mi_temps_final, aes(x = FTR_label, y = HTR_label, fill = Pourcentage)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 La heatmap montre que le résultat à la mi-temps est fortement lié au résultat final. Lorsqu’une équipe mène à la pause, elle conserve souvent son avantage jusqu’à la fin du match. Les cases correspondant à une continuité entre la mi-temps et le résultat final apparaissent ainsi comme les plus importantes.
 
 En revanche, les matchs nuls à la mi-temps donnent des résultats plus variés. Le résultat à la pause constitue donc un bon indicateur de l’issue du match, mais il ne permet pas une prédiction parfaite.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Ces résultats confirment notre hypothèse : l’avantage acquis à la mi-temps influence fortement le résultat final. Cela peut s’expliquer par la possibilité pour l’équipe qui mène de mieux gérer le rythme du match, de défendre son avance ou de forcer l’adversaire à prendre davantage de risques.
 
 Cependant, cette analyse reste globale. Elle ne prend pas en compte d’autres facteurs importants, comme le moment des buts en seconde période, les cartons rouges, les blessures, les changements tactiques ou le niveau relatif des équipes.
 
-### Comparaison avec Power BI
+#### Comparaison avec Power BI
 
 Nous avons également reproduit cette analyse avec Power BI afin de comparer le résultat avec la heatmap réalisée sous R.
 
@@ -485,14 +547,15 @@ La différence principale concerne la forme de la visualisation. La heatmap prod
 
 Cette comparaison montre que les deux outils conduisent à la même conclusion : le résultat à la mi-temps est fortement lié au résultat final. R est plus adapté pour produire une visualisation contrôlée, esthétique et reproductible, tandis que Power BI est plus pratique pour explorer rapidement les données de manière interactive.
 
+## 3. Performance offensive et efficacité
 
-## 8. La différence de tirs entre les deux équipes est-elle associée au résultat final ?
+### Question 7 — La différence de tirs entre les deux équipes est-elle associée au résultat final ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que la différence de tirs entre les deux équipes est liée au résultat final du match. Plus une équipe tire davantage que son adversaire, plus elle devrait avoir de chances de gagner, car un avantage en tirs peut refléter une domination offensive ou une meilleure capacité à créer des occasions. Cependant, cette relation n’est pas automatique, car le nombre de tirs ne prend pas en compte la qualité des occasions.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Pour répondre à cette question, nous utilisons un diagramme en barres empilées à 100 %. Ce type de visualisation permet de comparer la répartition des résultats finaux selon plusieurs niveaux de différence de tirs.
 
@@ -565,26 +628,26 @@ ggplot(shots_group, aes(x = Groupe_tirs, fill = Resultat)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre une tendance progressive : plus l’avantage en tirs est favorable à l’équipe à domicile, plus la proportion de victoires à domicile augmente. À l’inverse, lorsque l’avantage en tirs est favorable à l’équipe à l’extérieur, les victoires à l’extérieur sont plus fréquentes.
 
 Dans la catégorie « Égalité », les résultats sont plus équilibrés : aucune issue ne domine totalement. Cela suggère que la différence de tirs est bien associée au résultat final, mais qu’elle ne suffit pas à expliquer tous les matchs.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 La domination en nombre de tirs semble donc être un indicateur important du résultat final. Cependant, cette relation n’est pas automatique : même avec un fort avantage en tirs, une équipe peut ne pas gagner.
 
 Cette analyse ne prend pas en compte la qualité des tirs. Un tir cadré, une occasion dangereuse ou un tir lointain sont ici traités de manière trop simple. C’est pourquoi il est nécessaire de compléter cette analyse avec les tirs cadrés et l’efficacité offensive.
 
 
-## 9. Les tirs cadrés permettent-ils de mieux expliquer le nombre de buts que le nombre total de tirs ?
+### Question 8 — Les tirs cadrés permettent-ils de mieux expliquer le nombre de buts que le nombre total de tirs ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que les tirs cadrés sont plus liés au nombre de buts que le nombre total de tirs. En effet, un tir cadré représente une occasion plus dangereuse qu’un simple tir, car il oblige le gardien ou la défense à intervenir directement.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Pour répondre à cette question, nous utilisons un nuage de points comparatif. Cette visualisation permet d’observer la relation entre deux variables numériques : le nombre de tirs et le nombre de buts.
 
@@ -645,7 +708,7 @@ ggplot(epl_q9_long, aes(x = Nombre_tirs, y = TotalGoals)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Les deux graphiques montrent une relation positive entre les tirs et les buts : plus le nombre de tirs augmente, plus le nombre de buts a tendance à augmenter.
 
@@ -653,7 +716,7 @@ Cependant, cette relation est plus nette pour les tirs cadrés. La droite de ten
 
 Les tirs totaux donnent donc une information sur le volume offensif, mais les tirs cadrés semblent mieux liés au nombre de buts. Cela suggère que la précision des tirs est plus importante que la simple quantité de tirs.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Cette analyse montre que les tirs cadrés sont un meilleur indicateur de l’efficacité offensive que les tirs totaux. Une équipe peut beaucoup tirer sans marquer si ses tirs ne sont pas cadrés.
 
@@ -663,15 +726,16 @@ Pour aller plus loin, il serait utile d’étudier les tirs cadrés par équipe 
 
 Une limite de ce graphique est que plusieurs matchs peuvent avoir exactement les mêmes valeurs de tirs et de buts. Les points se superposent donc parfois, même avec le léger décalage appliqué. D'autres représentations pourraient permettre de mieux visualiser la concentration des observations.
 
-## Question 11 — La quantité de tirs garantit-elle la victoire ?
 
-### Hypothèse
+### Question 9 — La quantité de tirs garantit-elle la victoire ?
+
+#### Hypothèse
 Nous supposons que dominer aux tirs reflète une pression offensive soutenue : 
 * chaque tir représente une opportunité de marquer, 
 * et la loi des grands nombres suggère qu'un ShotDiff positif devrait augmenter la probabilité de victoire. 
 Toutefois, nous anticipons que cette relation n'est pas parfaite; la qualité des tirs (cadrés, dangereux) compte autant que le volume.
 
-### Choix de visualisation
+#### Choix de visualisation
 
 Un **Density Ridge Plot** (graphique de densité de crêtes) représente la distribution *continue* du
 différentiel de tirs (`ShotDiff = HS − AS`) pour chacune des trois issues finales du match.
@@ -710,20 +774,20 @@ ggplot(epl, aes(x = ShotDiff, y = FTR, fill = FTR)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 Le pic de la crête verte (`H`) se situe nettement **au-delà de zéro (≈ +5)**, tandis que la crête rouge (`A`) est centrée sur des valeurs **négatives (≈ −3)**. La crête grise (`D`) se concentre autour de **zéro**, confirmant l'équilibre aux tirs lors des matchs nuls.
 Le volume de tirs est un indicateur fort du résultat. Toutefois, l'**étalement** des crêtes en particulier celle des victoires à domicile révèle qu'un différentiel positif reste une condition favorable, non suffisante.
 L'hypothèse est partiellement validée : la tendance est confirmée (ShotDiff > 0 = victoire plus probable), mais l'étalement des crêtes infirme l'idée que le volume de tirs serait le *premier* indicateur de la victoire.
 
-### Critique et limites
+#### Critique et limites
 Le `ShotDiff` ne tient pas compte du **bloc défensif** : une équipe qui mène peut volontairement
 reculer et contrer, affichant un différentiel négatif tout en maîtrisant le match.
 
-## Question 12 — Quelle est la fréquence des hold-ups ?
-### Hypothèse
+### Question 10 — Quelle est la fréquence des hold-ups ?
+#### Hypothèse
 Nous supposons que les **hold-ups** sont rares car un volume de tirs réduit limite les occasions de marquer. Cependant, un contre-attaquant efficace peut compenser la quantité par la qualité; nous estimons que les hold-ups représentent entre **15 et 25 %** des rencontres.
 
-### Choix de visualisation
+#### Choix de visualisation
 Le nuage de points encode deux variables quantitatives continues (HS, AS) sur les canaux **position X et Y**; le plus précis selon Cleveland & McGill. La **couleur** (FTR) est un encodage pré-attentif catégoriel permettant de repérer les hold-ups sans lecture active. La diagonale $x = y$ est un repère sémiologique : elle matérialise la frontière entre domination domicile et domination extérieure, transformant un scatter plot en outil de détection d'anomalies. La transparence atténue la saturation visuelle liée aux 11 000 observations.
 
 ```{r q12-scatter-holdup, echo=FALSE, message=FALSE, warning=FALSE}
@@ -747,7 +811,7 @@ ggplot(epl, aes(x = HS, y = AS, color = FTR)) +
   theme(plot.title = element_text(face = "bold"))
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 ```{r q12-holdup-count, echo=FALSE}
 holdup_pct <- epl %>%
   filter(!is.na(HS), !is.na(AS), !is.na(FTR)) %>%
@@ -758,17 +822,17 @@ holdup_pct <- epl %>%
 
 Les points colorés situés du mauvais côté de la diagonale représentent **`r holdup_pct` %** des matchs soit un hold-up sur environ `r round(100/holdup_pct)` rencontres. L'hypothèse est **partiellement validée** : les hold-ups sont non négligeables et dépassent notre seuil bas de 15 %, confirmant que l'efficacité peut compenser le volume..
 
-### Critique et limites
+#### Critique et limites
 Le graphique **sature** en raison du grand nombre d'observations. Par ailleurs, compter les tirs totaux masque la **dangerosité réelle** des actions; les *Expected Goals* (xG) ou les tirs cadrés
 offriraient un filtre nettement plus pertinent.
 
-## 13. Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
+### Question 11 — Les matchs les plus ouverts offensivement sont-ils aussi les plus imprévisibles ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que les matchs avec beaucoup de buts ne sont pas forcément les plus équilibrés. Un match très ouvert peut correspondre à une rencontre spectaculaire et serrée, mais aussi à une large victoire d’une équipe.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un nuage de points afin d’étudier la relation entre le nombre total de buts dans un match et l’écart final au score. Cette visualisation permet de voir si les matchs riches en buts sont plutôt serrés ou déséquilibrés.
 ```{r q13-equilibre-tirs-nul, echo=FALSE, message=FALSE, warning=FALSE, fig.width=8, fig.height=5, fig.align='center', out.width='90%'}
@@ -815,13 +879,13 @@ ggplot(epl_q13, aes(x = TotalGoals, y = GoalDiff)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre que les matchs avec peu de buts présentent souvent un écart au score limité. Cela correspond notamment aux scores serrés comme 0-0, 1-0 ou 1-1.
 
 Lorsque le nombre total de buts augmente, l'écart au score tend également à augmenter légèrement. Les matchs les plus offensifs ne sont donc pas systématiquement les plus serrés : certains sont spectaculaires mais restent déséquilibrés.
 
-### Critiques et limites
+#### Critiques et limites
 
 Cette analyse mesure l’équilibre d’un match uniquement avec l’écart final au score. Elle ne permet pas de savoir si le match a réellement été disputé pendant toute sa durée.
 
@@ -829,13 +893,13 @@ De plus, un score final serré ne signifie pas forcément que les deux équipes 
 
 L'imprévisibilité d'un match est ici approximée par l'écart final au score. Cet indicateur permet de mesurer le niveau d'équilibre du résultat, mais il ne reflète pas parfaitement l'incertitude réelle du match. Un match peut rester indécis jusqu'aux dernières minutes tout en se terminant avec un écart relativement important, ou inversement.
 
-## 14. Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ?
+### Question 12 — Comment l'efficacité (Buts/Tirs) varie-t-elle selon les 5 meilleures équipes ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que les meilleures équipes ne sont pas seulement celles qui tirent beaucoup, mais aussi celles qui convertissent efficacement leurs tirs en buts. Une équipe très performante offensivement devrait donc présenter un ratio buts/tirs plus élevé que les autres.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un diagramme en barres avec facettes afin de comparer l’efficacité offensive des cinq équipes qui ont marqué le plus de buts dans le dataset.
 
@@ -917,7 +981,7 @@ ggplot(epl_q14, aes(x = Team, y = Efficacite)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique compare l’efficacité offensive des cinq équipes ayant marqué le plus de buts dans le dataset. Les différences observées montrent que les meilleures attaques ne se distinguent pas uniquement par leur volume de buts, mais aussi par leur capacité à transformer leurs tirs en buts.
 
@@ -925,7 +989,7 @@ Une équipe avec un ratio buts/tirs plus élevé apparaît plus efficace, car el
 
 Cette analyse permet donc de nuancer le classement des meilleures attaques. Marquer beaucoup de buts ne signifie pas nécessairement être l’équipe la plus efficace : certaines équipes peuvent compenser une efficacité plus faible par une production offensive très élevée.
 
-### Critiques et limites
+#### Critiques et limites
 
 Le ratio buts/tirs donne une indication simple de l’efficacité offensive, mais il ne tient pas compte de la qualité des tirs. Une équipe peut avoir un bon ratio parce qu’elle se crée des occasions très dangereuses, ou parce qu’elle bénéficie de situations particulières comme des penalties.
 
@@ -933,12 +997,14 @@ De plus, cette analyse sélectionne les cinq équipes ayant marqué le plus de b
 
 Enfin, les données sont agrégées sur plusieurs saisons. Les effectifs, les entraîneurs et les styles de jeu des équipes ont pu évoluer au fil du temps, ce qui limite l’interprétation directe des différences observées.
 
-## Question 15 — L'agressivité (fautes) pénalise-t-elle le résultat final ?
+## 4. Discipline et impact sur le jeu
 
-### Hypothèse
+### Question 13 — L'agressivité (fautes) pénalise-t-elle le résultat final ?
+
+#### Hypothèse
 Nous supposons qu'une équipe qui commet plus de fautes subit une pression défensive accrue, ce qui se traduit par un nombre élevé de cartons, de penalties concédés donc plus de défaites. Nous anticipons donc une corrélation positive entre fautes commises et résultat négatif.
 
-### Choix de visualisation
+#### Choix de visualisation
 Le boxplot jumelé encode simultanément trois variables : 
  * `FTR` (position X), 
  * nombre de fautes (position Y : canal le plus précis selon Cleveland), 
@@ -969,25 +1035,25 @@ epl %>%
   theme(plot.title = element_text(face = "bold"))
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Les distributions restent **quasi-identiques** quelle que soit l'issue du match
 (médiane stable autour de 11–13 fautes).
 Le nombre brut de fautes n'a **aucun pouvoir prédictif** direct sur le résultat. Un jeu haché ou agressif fait partie intégrante de certaines stratégies sans pour autant pénaliser le score final.
 L'hypothèse est **infirmée** : contrairement à ce qu'on anticipait, les médianes sont quasi-identiques quelle que soit l'issue. Le boxplot jumelé rend cette absence d'effet visuellement évidente; une conclusion négative mais analytiquement valide.
 
-### Critique et limites
+#### Critique et limites
 Toutes les fautes n'ont pas la même valeur :
 une faute tactique au milieu de terrain pour casser une contre-attaque est **bénéfique**, tandis qu'une faute dans la surface entraînant un penalty est **pénalisante**.
 Le dataset ne qualifie pas la **nature** de la faute.
 
-## 16. Existe-t-il une relation entre fautes et cartons ?
+### Question 14 — Existe-t-il une relation entre fautes et cartons ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons qu’il existe une relation positive entre le nombre de fautes commises par une équipe et le nombre de cartons qu’elle reçoit. Une équipe qui commet beaucoup de fautes devrait logiquement être plus exposée aux sanctions disciplinaires, même si toutes les fautes ne conduisent pas automatiquement à un carton.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un nuage de points afin d’étudier la relation entre deux variables numériques : le nombre de fautes commises et le nombre de cartons reçus.
 
@@ -1055,25 +1121,25 @@ ggplot(epl_q16, aes(x = Fautes, y = Cartons)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre une relation positive entre le nombre de fautes commises et le nombre de cartons reçus. Les équipes qui commettent davantage de fautes ont généralement tendance à recevoir plus de cartons.
 
 Toutefois, la dispersion des points montre que cette relation n'est pas parfaite. Pour un même nombre de fautes, certaines équipes reçoivent plus de cartons que d'autres, ce qui suggère que d'autres facteurs interviennent également.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Cette analyse repose uniquement sur les cartons jaunes et ne prend pas en compte les cartons rouges.
 
 Par ailleurs, toutes les fautes sont comptabilisées de la même manière alors que certaines sont plus sévères que d'autres. Le contexte du match ou les décisions arbitrales peuvent également influencer le nombre de cartons distribués.
 
-## 17. Les arbitres sanctionnent-ils de la même manière un nombre donné de fautes ?
+### Question 15 — Les arbitres sanctionnent-ils de la même manière un nombre donné de fautes ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons qu’à nombre de fautes comparable, certains arbitres distribuent davantage de cartons que d’autres. Cela pourrait traduire des différences dans leur manière de sanctionner les rencontres.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un nuage de points afin de comparer, pour chaque arbitre, le nombre moyen de fautes observées et le nombre moyen de cartons distribués. Cette visualisation permet de voir si les arbitres qui dirigent des matchs plus fautifs distribuent aussi davantage de cartons.
 
@@ -1131,25 +1197,25 @@ ggplot(epl_q17, aes(x = Fautes_moyennes, y = Cartons_moyens)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
 
 Cependant, tous les points ne sont pas parfaitement alignés. Pour un niveau de fautes proche, certains arbitres distribuent plus de cartons que d’autres. Cela suggère que la sanction ne dépend pas seulement du nombre de fautes, mais aussi de l’interprétation de l’arbitre.
 
-### Critiques et limites
+#### Critiques et limites
 
 Cette analyse repose sur des moyennes par arbitre, ce qui peut masquer des différences importantes entre les matchs.
 
 De plus, le graphique ne prend pas en compte la gravité des fautes ni le contexte des rencontres. Un même nombre de fautes peut donc conduire à un nombre de cartons différent selon la nature du match.
 
-## 18. Certaines équipes sont-elles plus sanctionnées que d'autres ?
+### Question 16 — Certaines équipes sont-elles plus sanctionnées que d'autres ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que certaines équipes reçoivent davantage de cartons que d’autres. Ces différences peuvent être liées au style de jeu, au niveau d’agressivité, à la stratégie défensive ou encore à la fréquence des situations de pression subies pendant les matchs.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un diagramme en barres horizontal afin de comparer le nombre moyen de cartons reçus par match selon les équipes.
 
@@ -1207,25 +1273,25 @@ ggplot(epl_q18, aes(x = Team, y = Cartons_moyens)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique permet d’observer la relation entre le nombre moyen de fautes et le nombre moyen de cartons selon les arbitres. Globalement, les arbitres associés à des matchs plus fautifs ont tendance à distribuer davantage de cartons.
 
 Cependant, tous les points ne sont pas parfaitement alignés. Pour un niveau de fautes proche, certains arbitres distribuent plus de cartons que d’autres. Cela suggère que la sanction ne dépend pas seulement du nombre de fautes, mais aussi de l’interprétation de l’arbitre.
 
-### Critiques et limites
+#### Critiques et limites
 
 Cette analyse repose sur des moyennes par arbitre, ce qui peut masquer des différences importantes entre les matchs.
 
 De plus, le graphique ne prend pas en compte la gravité des fautes ni le contexte des rencontres. Un même nombre de fautes peut donc conduire à un nombre de cartons différent selon la nature du match.
 
-## 19. Les arbitres distribuent-ils différemment les cartons ?
+### Question 17 — Les arbitres distribuent-ils différemment les cartons ?
 
-### Hypothèse
+#### Hypothèse
 
 Nous supposons que le nombre de cartons distribués peut varier selon les arbitres. Certains arbitres peuvent avoir tendance à sanctionner plus fréquemment les fautes, tandis que d’autres peuvent laisser davantage jouer. Cette différence pourrait se traduire par un nombre moyen de cartons par match plus élevé chez certains arbitres.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 
 Nous utilisons un diagramme en barres horizontal afin de comparer le nombre moyen de cartons distribués par match selon les arbitres. Cette visualisation est adaptée car elle permet de comparer clairement plusieurs catégories, ici les arbitres, à partir d’une mesure numérique.
 
@@ -1279,27 +1345,29 @@ ggplot(epl_q19, aes(x = Referee, y = Cartons_moyens)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre que le nombre moyen de cartons distribués varie selon les arbitres. Certains arbitres distribuent en moyenne davantage de cartons que d'autres.
 
 Les écarts observés restent cependant relativement modérés. Cela suggère que les arbitres n'ont pas exactement les mêmes habitudes de sanction, même si leurs comportements restent globalement comparables.
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Cette analyse repose sur une moyenne de cartons par match, ce qui ne permet pas de prendre en compte la variabilité entre les rencontres.
 
 De plus, le nombre de cartons peut dépendre du style de jeu des équipes ou du contexte du match, et pas uniquement de l'arbitre lui-même.
-  
-## 20.Le nombre de buts évolue-t-il selon les saisons ?
 
-### Hypothèse
+## 5. Évolution et vision globale
+  
+### Question 18 — Le nombre de buts évolue-t-il selon les saisons ?
+
+#### Hypothèse
 
 Nous cherchons à savoir si le nombre moyen de buts marqués par match évolue au fil des saisons de Premier League.
 
 On peut supposer que certaines saisons sont plus offensives que d’autres, ce qui pourrait se traduire par des variations du nombre moyen de buts.
 
-### Choix de la visualisation
+#### Choix de la visualisation
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Calcul de la moyenne de buts par saison
 season_goals <- epl %>%
@@ -1324,7 +1392,7 @@ ggplot(season_goals, aes(x = Season, y = MeanGoals, group = 1)) +
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 
 Le graphique montre l’évolution du nombre moyen de buts par match au fil des saisons de Premier League.
 
@@ -1334,7 +1402,7 @@ Cependant, certaines fluctuations apparaissent selon les saisons. On remarque pa
 
 Dans les saisons les plus récentes, la moyenne semble légèrement plus élevée qu’au milieu des années 2000. Cela suggère une tendance modérée à l’augmentation du nombre de buts, même si cette évolution reste limitée.
 
-### Comparaison avec Power BI
+#### Comparaison avec Power BI
 
 En complément du graphique réalisé avec R, nous avons également reproduit cette visualisation dans Power BI. L’objectif est de comparer les résultats obtenus avec deux outils différents et de vérifier leur cohérence.
 
@@ -1347,7 +1415,7 @@ Le graphique Power BI montre également l’évolution du nombre moyen de buts p
 Power BI permet une lecture plus interactive, notamment grâce aux filtres par saison et à la possibilité de modifier rapidement la période étudiée. Le graphique réalisé avec R est quant à lui directement intégré au rapport et reproductible à partir du code.
 
 
-### Interprétation et limites
+#### Interprétation et limites
 
 Ces résultats indiquent que le nombre de buts par match en Premier League reste relativement stable sur l’ensemble de la période étudiée, avec quelques variations selon les saisons.
 
@@ -1355,12 +1423,12 @@ Il faut cependant rester prudent dans l’interprétation. Le graphique permet d
 
 Ainsi, on peut parler d’une légère tendance à la hausse dans les saisons récentes, mais il serait nécessaire d’analyser d’autres variables pour confirmer l’idée d’un championnat plus offensif ou plus spectaculaire.
 
-## Question 22 — Le jeu de Premier League est-il devenu plus propre ou plus indiscipliné ?
+### Question 19 —  Le jeu de Premier League est-il devenu plus propre ou plus indiscipliné ?
 
-### Hypothèse
+#### Hypothèse
 Le football moderne étant plus rapide, plus médiatisé et mieux arbitré, le nombre de fautes **diminue** globalement tandis que le nombre de cartons **augmente** sous l'effet d'une sévérité accrue du règlement.
 
-### Choix de visualisation
+#### Choix de visualisation
 Le line chart encode le temps (ordinale) sur l'axe X et la moyenne sur Y : canal **position**, le plus précis pour les séries temporelles selon Cleveland & McGill. La **couleur** distingue les deux indicateurs (canal pré-attentif catégoriel) : bleu pour les fautes, orange pour les cartons. Le **faceting** est justifié par les échelles incompatibles (fautes : 20–28 ; cartons : 3–4); les fusionner sur un seul axe écraserait l'une des courbes, constituant un *Lie Factor* par compression visuelle. 
 La **plus-value** : le faceting rend visible la **divergence** entre les deux indicateurs sur 30 ans; phénomène impossible à percevoir dans un tableau.
 
@@ -1404,13 +1472,12 @@ ggplot(epl_chrono, aes(x = Season, y = Valeur, group = Indicateur, color = Indic
   )
 ```
 
-### Analyse des résultats
+#### Analyse des résultats
 On observe une **chute spectaculaire et continue des fautes** par match, passant d'environ **28 à moins de 21** en trente ans.
 En parallèle, le nombre de cartons reste **stable voire légèrement croissant**.
-L'hypothèse est validée.
 L'hypothèse est validée. La baisse représente environ **−25 %** du volume de fautes sur 30 ans, une réduction structurelle. Le jeu s'est fluidifié, mais la tolérance arbitrale a diminué : les fautes moins nombreuses sont désormais sanctionnées plus sévèrement.
 
-### Critique et limites
+#### Critique et limites
 Les données des premières saisons (1993–1995) souffrent parfois de **lacunes dans le dataset**, ce qui peut créer un biais sur le point de départ des courbes.
 
 
@@ -1422,13 +1489,16 @@ Afin de compléter les analyses statiques réalisées avec ggplot2, nous avons d
 
 L'utilisateur peut filtrer les données selon la saison ou l'équipe étudiée et visualiser instantanément les résultats obtenus.
 
+Les captures d’écran présentées dans cette partie proviennent de l’application Shiny développée dans le dossier `/shiny/`. Ces figures ne sont donc pas générées directement dans le rapport RMarkdown, mais illustrent les visualisations interactives que l’utilisateur peut explorer dans l’application.
+
+
 ## Interface générale
 
 ```{r shiny-interface, echo=FALSE, out.width="90%"}
 knitr::include_graphics("shiny/shiny_interface.png")
 ```
 
-L'application est organisée autour de trois visualisations interactives accessibles depuis un menu latéral. Plusieurs filtres permettent de personnaliser l'analyse selon les besoins de l'utilisateur.
+L'application est organisée autour de trois visualisations interactives accessibles depuis un menu latéral. Plusieurs filtres permettent de personnaliser l'analyse selon les besoins de l'utilisateur, notamment en sélectionnant une saison, une équipe ou un nombre d’équipes à afficher.
 
 ## Visualisation 1 : Évolution du nombre moyen de buts par saison
 
@@ -1444,7 +1514,7 @@ Cette visualisation permet d'observer l'évolution du nombre moyen de buts marqu
 knitr::include_graphics("shiny/shiny_cartons.png")
 ```
 
-Ce graphique interactif présente les équipes recevant le plus de cartons en moyenne. L'utilisateur peut ajuster le nombre d'équipes affichées grâce à un curseur dédié.
+Ce graphique interactif présente les équipes recevant le plus de cartons en moyenne. L'utilisateur peut ajuster le nombre d'équipes affichées grâce à un curseur, ce qui facilite la comparaison entre les équipes les plus sanctionnées.
 
 ## Visualisation 3 : Relation entre tirs et buts
 
@@ -1452,8 +1522,39 @@ Ce graphique interactif présente les équipes recevant le plus de cartons en mo
 knitr::include_graphics("shiny/shiny_tirs.png")
 ```
 
-Cette visualisation met en évidence la relation entre le nombre total de tirs réalisés lors d'un match et le nombre total de buts inscrits. Les filtres permettent d'explorer différents contextes de jeu.
+Cette visualisation met en évidence la relation entre le nombre total de tirs réalisés lors d'un match et le nombre total de buts inscrits. Les filtres permettent d'explorer différents contextes de jeu, par exemple une saison précise ou une équipe particulière.
 
 ## Apport de l'interactivité
 
 L'application Shiny apporte une dimension interactive aux analyses présentées dans ce rapport. Elle permet à l'utilisateur d'explorer librement les données, de filtrer les observations et d'obtenir une vision plus détaillée des phénomènes observés.
+
+Par rapport aux visualisations statiques du rapport, l’application permet de modifier les paramètres d’analyse sans générer un nouveau graphique à chaque fois. Elle complète donc le rapport en facilitant l’exploration de sous-groupes de données.
+
+# Conclusion
+
+Ce projet nous a permis d’explorer les résultats de Premier League à travers plusieurs aspects : l’avantage du terrain, l’évolution du score entre la mi-temps et la fin du match, la performance offensive, l’efficacité des tirs et la discipline.
+
+Les visualisations réalisées montrent que l’avantage du terrain reste visible, que le résultat à la mi-temps est souvent lié au résultat final, et que les tirs cadrés semblent plus pertinents que le simple nombre total de tirs pour comprendre la capacité d’une équipe à marquer. L’analyse de la discipline suggère également une évolution du style de jeu au fil des saisons.
+
+Cependant, notre analyse reste exploratoire. Le dataset ne contient pas certaines informations importantes, comme les compositions d’équipe, les blessures, le classement des équipes ou le contexte précis de chaque match. De plus, certaines variables ne sont pas disponibles pour toutes les saisons, ce qui limite certaines comparaisons.
+
+Pour aller plus loin, il serait intéressant d’ajouter d’autres sources de données, notamment des statistiques sur les joueurs, les classements ou des indicateurs avancés comme les expected goals. Ce projet montre ainsi l’intérêt de la visualisation pour transformer des données sportives en analyses compréhensibles et interprétables.
+
+Enfin, chaque membre du groupe retient un apprentissage spécifique de ce projet :
+
+**DODZRO Darryl Junior Koffi** : 
+
+**FOTIO NGNINLAJUNG Francky** : 
+
+**HU Xinyu** : Ce projet m’a permis de mieux structurer une analyse exploratoire et de relier les visualisations à des interprétations claires. Il aurait été intéressant d’approfondir davantage la comparaison entre les visualisations produites avec R et Power BI, mais le temps disponible était limité.
+
+**NOUGWA KEMAJOU Tatiana** : 
+
+# Annexe — Répartition du travail
+
+| Membre                         | Travail réalisé |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HU Xinyu**                   | Participation à l’analyse des résultats de matchs, notamment sur l’avantage du terrain, la dynamique du score et l’efficacité offensive. Réalisation de visualisations complémentaires avec Power BI et comparaison avec les graphiques produits sous R. Contribution à la mise en forme générale du rapport. |
+| **DODZRO Darryl Junior Koffi** | Participation à l’analyse des dimensions offensives et disciplinaires du jeu, notamment sur les tirs, les fautes, les cartons et l’évolution du style de jeu au fil des saisons. |
+| **NOUGWA KEMAJOU Tatiana**     | Participation à l’analyse exploratoire générale des données, notamment sur la distribution des buts, les résultats à domicile et à l’extérieur, ainsi que les différences entre les équipes. Contribution à l’interprétation des résultats et à la rédaction de plusieurs parties du rapport. |
+| **FOTIO NGNINLAJUNG Francky**  | Développement de l’application Shiny, intégration des filtres interactifs et participation à la présentation des résultats interactifs. Contribution à l’analyse de certaines visualisations complémentaires. |
